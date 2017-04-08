@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema targetNamespace="urn:cppodsreport:report:1.0"
+    elementFormDefault="qualified"
+    attributeFormDefault="qualified"            
+    xmlns:rep="urn:cppodsreport:report:1.0"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+>
+  <xsd:complexType name="CellType">
+    <xsd:choice>
+      <xsd:element name="Value" type="xsd:string"/>
+      <xsd:element name="Table" type="rep:NestedTableType"/>
+    </xsd:choice>
+    <xsd:attribute name="ColumnName" type="xsd:string" use="required"/>    
+  </xsd:complexType>
+
+  <xsd:complexType name="NestedTableType">
+    <xsd:sequence>
+
+      <xsd:element name="Column" minOccurs="1" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:attribute name="Name" type="xsd:string" use="required"/>
+        </xsd:complexType>
+      </xsd:element>
+
+      <xsd:element name="Row" minOccurs="0" maxOccurs="unbounded">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Cell" type="rep:CellType" minOccurs="1" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+
+    </xsd:sequence>    
+  </xsd:complexType>
+
+  <xsd:complexType name="TableType">
+    <xsd:complexContent>
+      <xsd:extension base="rep:NestedTableType">
+        <xsd:attribute name="Name" use="required"/>
+        <xsd:attribute name="BlockTable" type="xsd:boolean" use="required"/>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+    
+  <xsd:element name="DataSource">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element type="rep:TableType" name="Table" minOccurs="1" maxOccurs="unbounded"/>                  
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  
+</xsd:schema>

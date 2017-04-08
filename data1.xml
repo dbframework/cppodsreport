@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<DataSource xmlns="urn:cppodsreport:report:1.0" xmlns:rep="urn:cppodsreport:report:1.0">
+  <Table rep:Name="T1" rep:BlockTable="false">
+    <Column rep:Name="Col1"/>
+    <Column rep:Name="Col2"/>
+    <Column rep:Name="Col3"/>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>Value1</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>Value2</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>Value3</Value>
+      </Cell>
+    </Row>
+  </Table>
+
+  <Table rep:Name="T2" rep:BlockTable="true">
+    <Column rep:Name="Col1"/>
+    <Column rep:Name="Col2"/>
+    <Column rep:Name="Col3"/>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>T2(0,0)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>T2(0,1)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>T2(0,2)</Value>
+      </Cell>
+    </Row>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>T2(1,0)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>T2(1,1)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>T2(1,2)</Value>
+      </Cell>
+    </Row>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>T2(2,0)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>T2(2,1)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>T2(2,2)</Value>
+      </Cell>
+    </Row>
+  </Table>
+
+  <Table rep:Name="T3" rep:BlockTable="true">
+    <Column rep:Name="Col1"/>
+    <Column rep:Name="Col2"/>
+    <Column rep:Name="Col3"/>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>T3(0,0)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>T3(0,1)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>T3(0,2)</Value>
+      </Cell>
+    </Row>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>T3(1,0)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>T3(1,1)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>T3(1,2)</Value>
+      </Cell>
+    </Row>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>T3(2,0)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>T3(2,1)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>T3(2,2)</Value>
+      </Cell>
+    </Row>
+  </Table>
+
+  <Table rep:Name="T4" rep:BlockTable="true">
+    <Column rep:Name="Col1"/>
+    <Column rep:Name="Col2"/>    
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>T4(0,0)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Table>
+          <Column rep:Name="Col1"/>
+          <Column rep:Name="Col2"/>
+          <Row>
+            <Cell rep:ColumnName="Col1">
+              <Value>T4(0,1)Col2(0,0)</Value>
+            </Cell>
+            <Cell rep:ColumnName="Col2">
+              <Value>T4(0,1)Col2(0,1)</Value>
+            </Cell>
+          </Row>
+          <Row>
+            <Cell rep:ColumnName="Col1">
+              <Value>T4(0,1)Col2(1,0)</Value>
+            </Cell>
+            <Cell rep:ColumnName="Col2">
+              <Value>T4(0,1)Col2(1,1)</Value>
+            </Cell>
+          </Row>
+        </Table>
+      </Cell>      
+    </Row>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>T4(1,0)</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Table>
+          <Column rep:Name="Col1"/>
+          <Column rep:Name="Col2"/>
+          <Row>
+            <Cell rep:ColumnName="Col1">
+              <Value>T4(1,1)Col2(0,0)</Value>
+            </Cell>
+            <Cell rep:ColumnName="Col2">
+              <Value>T4(1,1)Col2(0,1)</Value>
+            </Cell>
+          </Row>
+          <Row>
+            <Cell rep:ColumnName="Col1">
+              <Value>T4(1,1)Col2(1,0)</Value>
+            </Cell>
+            <Cell rep:ColumnName="Col2">
+              <Value>T4(1,1)Col2(1,1)</Value>
+            </Cell>
+          </Row>
+        </Table>
+      </Cell>      
+    </Row>    
+  </Table>
+
+  <Table rep:Name="T5" rep:BlockTable="true">
+    <Column rep:Name="Col1"/>
+    <Column rep:Name="Col2"/>
+    <Column rep:Name="Col3"/>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>0</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>1</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>2</Value>
+      </Cell>
+    </Row>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>3</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>4</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>5</Value>
+      </Cell>
+    </Row>
+    <Row>
+      <Cell rep:ColumnName="Col1">
+        <Value>6</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col2">
+        <Value>7</Value>
+      </Cell>
+      <Cell rep:ColumnName="Col3">
+        <Value>8</Value>
+      </Cell>
+    </Row>
+  </Table>  
+  
+</DataSource>
