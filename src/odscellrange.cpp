@@ -43,7 +43,7 @@ bool ODSCellRange::setValue(const std::wstring& str)
 
     Index middle = str.find(L':');
     if (middle == wstring::npos) {
-        if (begin.setValue(str.substr(1, str.size() - 2)))
+        if (!begin.setValue(str.substr(1, str.size() - 2)))
             return result;
         end = begin;
     }
