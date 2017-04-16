@@ -39,10 +39,16 @@ public:
     ODSTableRow(const DomElement& rowNode);
     ODSCellList& cells();
     DomElement rowNode();
-    void copyCells(ODSTableRow& targetRow, ODSCellList::iterator where, ODSCellList::size_type index, ODSCellList::size_type count);
+    /*!
+        This methos copies cells from this ODSTableRow to another ODSTableRow inserting them to the specified position.
+        @param[in] destRow ODSTableRow to copy to.
+        @param[in] where destRow iterator specifying position where to insert copied cells.
+        @param[in] index Position in this ODSTableRow to copy from (cell zero-based index). 
+        @param[in] count Number of cells to copy. If it is zero all cells up to the end of the row will be copied.
+    */
+    void copyCells(ODSTableRow& destRow, ODSCellList::iterator where, ODSCellList::size_type index, ODSCellList::size_type count);
     unsigned int repeatCount() const;
-    void setRepeatCount(unsigned int value);
-    //void copyTo(ODSTableRow& copy);
+    void setRepeatCount(unsigned int value);    
 };
 
 }

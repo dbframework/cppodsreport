@@ -149,14 +149,14 @@ ODSCellAddress::CellIndex ODSCellAddress::decodeColumn(std::wstring col) const
     for (wstring::reverse_iterator i = col.rbegin(); i != col.rend(); ++i, power *= englishLetters) {
         ODSCellAddress::CellIndex digit;
         if ((*i >= L'a') && (*i <= L'z')) {
-            digit = *i - L'a';
+            digit = *i - L'a' + 1;
         }
         else {
-            digit = *i - L'A';
+            digit = *i - L'A' + 1;
         }
         result += digit * power;
     }
-    return result;
+    return result - 1;
 }
 
 bool ODSCellAddress::valid() const
@@ -232,9 +232,10 @@ std::wstring ODSCellAddress::encodeColumn(CellIndex col) const
     wstring result;
     const int englishLetters = 26;
 
+    col++;
     do  {
         CellIndex digit = col % englishLetters;
-        rev += 'A' + digit;
+        rev += 'A' + digit - 1;
         col /= englishLetters;
     } while (col > 0);
 

@@ -57,27 +57,37 @@ DomElement ODSTableRow::rowNode()
     return m_rowNode;
 }
 
-void ODSTableRow::copyCells(ODSTableRow &targetRow, ODSCellList::iterator where, ODSCellList::size_type index, ODSCellList::size_type count)
+void ODSTableRow::copyCells(ODSTableRow &destRow, ODSCellList::iterator where, ODSCellList::size_type index, ODSCellList::size_type count)
 {
      ODSCellList::iterator i = m_cells.begin();
      ODSCellList::size_type pos = 0;
      size_t toCopy;
      ODSCellList::size_type totalCellsToCopy  = count;  
 
+     //Every cell can represent several identical cells depending on ODSCell.m_repeatCount.
+     //Code below finds which cell represents cell in position <index>.
      for (; (i != m_cells.end()) && (pos < index); ++i) {
          if (pos + i->repeatCount() > index)
              break;
          pos += i->repeatCount();
      }
 
+     //Copy cells to the end of the row or until totalCellsToCopy cells copied.
      for(; (i != m_cells.end()) && ((count == 0) || (totalCellsToCopy > 0)); ++i) {
-         toCopy = min(i->repeatCount() - (index - pos), totalCellsToCopy);
+         //toCopy defines how many times we need to copy current cell. On first and last iteration 
+         //only part of the cells, represented by current cell, may be required to copy.
+         //Next line represents possible split of the first cell.
+         toCopy = i->repeatCount() - (index - pos);
+         //Next line represents possible split of the last cell.
+         if (totalCellsToCopy > 0)
+             toCopy = min(toCopy, totalCellsToCopy);
+         //To make (index - pos) zero after first iteration.
          pos = index;         
          ODSCell c(*i);
          if (toCopy != c.repeatCount()) {
              c.setRepeatCount(toCopy);
          }
-         targetRow.cells().insert(where, c);
+         destRow.cells().insert(where, c);
          totalCellsToCopy -= toCopy;
      }
 }

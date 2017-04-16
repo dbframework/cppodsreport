@@ -168,9 +168,11 @@ void ODSCell::saveText()
 void ODSCell::checkText()
 {
     try {
-        stod(m_text);
-        //it's a number
-        m_valueType = VT_FLOAT;
+        size_t pos;
+        stod(m_text, &pos);
+        //whole m_text is a number, not only m_text start
+        if (pos >= m_text.size())
+            m_valueType = VT_FLOAT;
     }
     catch(std::exception& ){
 

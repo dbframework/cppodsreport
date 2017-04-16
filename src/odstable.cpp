@@ -54,7 +54,7 @@ void ODSTable::addNodeListToLastRow(const DomNodeList& list, ODSTableMap &tables
     for (int j = 0; j < cellCount; ++j) {
         DomNode cell = list.item(j);
         if (cell.nodeType() == NODE_TYPE_ELEMENT) {
-            m_table.back().cells().emplace_back(DOMDocumentWrapper::toElement(cell));
+            m_table.back().cells().emplace_back(DOMDocumentWrapper::toElement(cell.cloneNode(true)));
             ODSFormulaSPtr f = m_table.back().cells().back().formula();
             if (f) {
                 for (const ODSCellRangeSPtr& pr : f->cellRanges()) {
@@ -267,7 +267,8 @@ void ODSTable::copyCellsDown(Table::iterator row,  ODSTableRow::ODSCellList::ite
         }
         rowCount += j->repeatCount();
         DomDocument doc = m_tableNode.ownerDocument();
-        j->cells().insert(j->cells().end(), colIndex, ODSCell(doc));
+        if (0 != colIndex)
+            j->cells().insert(j->cells().end(), colIndex, ODSCell(doc));
         row->copyCells(*j, j->cells().end(), colIndex, width);
         ++row;
         for (ODSCell &c : j->cells()) {
