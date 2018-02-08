@@ -66,3 +66,7 @@ DomString DOMDocumentWrapper::WstringToDomString(const std::wstring& str)
     return QString::fromWCharArray(str.c_str());
 }
 
+DomString DOMDocumentWrapper::qualifiedName(char* namespaceTag, char* name)
+{
+    return DomString(namespaceTag) + DomString(":") + DomString(name);
+}

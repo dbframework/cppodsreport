@@ -40,7 +40,6 @@ namespace cppodsreport {
 #define ODS_ELEMENT_CELL "table-cell"
 #define ODS_ELEMENT_COVERED_CELL "covered-table-cell"
 #define ODS_ELEMENT_DOC_CONTENT "document-content"
-
 #define ODS_ELEMENT_TEXTP "p"
 
 #define ODS_ATTR_COL_REP "number-columns-repeated"

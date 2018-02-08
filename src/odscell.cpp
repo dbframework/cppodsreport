@@ -18,6 +18,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 #include "odscell.h"
 #include "odsconst.h"
+#include <string> 
 
 using namespace cppodsreport;
 using namespace std;
@@ -36,7 +37,7 @@ ODSCell::ODSCell()
 ODSCell::ODSCell(DomDocument& doc)
 {    
     init();
-    m_cellNode = doc.createElementNS(ODS_NS_TABLE, ODS_ELEMENT_CELL);
+    m_cellNode = doc.createElementNS(ODS_NS_TABLE, DOMDocumentWrapper::qualifiedName(ODS_NSP_TABLE, ODS_ELEMENT_CELL));
 }
 
 ODSCell::ODSCell(const DomElement& cellNode)
@@ -47,7 +48,7 @@ ODSCell::ODSCell(const DomElement& cellNode)
     wstring ws = DOMDocumentWrapper::DomStringToWstring(s);
     if (!ws.empty()) {
         size_t idx;
-        m_repeatCount = stoul(ws, &idx);
+        m_repeatCount = std::stoul(ws, &idx);
         if (idx < ws.size())
             m_repeatCount = 1;
     }
@@ -135,7 +136,7 @@ void ODSCell::save()
 {
     saveText();
     if (m_repeatCount > 1) {
-        m_cellNode.setAttributeNS(ODS_NS_TABLE, ODS_ATTR_COL_REP, DOMDocumentWrapper().WstringToDomString(to_wstring(m_repeatCount)));
+        m_cellNode.setAttributeNS(ODS_NS_TABLE, DOMDocumentWrapper::qualifiedName(ODS_NSP_TABLE,ODS_ATTR_COL_REP), DOMDocumentWrapper().WstringToDomString(to_wstring(m_repeatCount)));
     }
     else {
         m_cellNode.removeAttributeNS(ODS_NS_TABLE, ODS_ATTR_COL_REP);
@@ -143,7 +144,7 @@ void ODSCell::save()
 
     if (m_formula.get() != nullptr) {
         m_formula->save();
-        m_cellNode.setAttributeNS(ODS_NS_TABLE, ODS_ATTR_FORMULA, DOMDocumentWrapper().WstringToDomString(m_formula->formula()));
+        m_cellNode.setAttributeNS(ODS_NS_TABLE, DOMDocumentWrapper::qualifiedName(ODS_NSP_TABLE, ODS_ATTR_FORMULA), DOMDocumentWrapper().WstringToDomString(m_formula->formula()));
     }
 }
 
@@ -160,8 +161,8 @@ void ODSCell::saveText()
     }
 
     if (VT_FLOAT == m_valueType) {
-        m_cellNode.setAttributeNS(ODS_NS_OFFICE, ODS_ATTR_VALUE_TYPE, "float");
-        m_cellNode.setAttributeNS(ODS_NS_OFFICE, ODS_ATTR_VALUE, DOMDocumentWrapper::WstringToDomString(m_text));
+        m_cellNode.setAttributeNS(ODS_NS_OFFICE, DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ATTR_VALUE_TYPE), "float");
+        m_cellNode.setAttributeNS(ODS_NS_OFFICE, DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ATTR_VALUE), DOMDocumentWrapper::WstringToDomString(m_text));
     }
 }
 

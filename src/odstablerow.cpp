@@ -30,7 +30,7 @@ ODSTableRow::ODSTableRow()
 ODSTableRow::ODSTableRow(DomDocument& doc)
 {
     m_repeatCount = 1;
-    m_rowNode = doc.createElementNS(ODS_NS_TABLE, ODS_ELEMENT_ROW);
+    m_rowNode = doc.createElementNS(ODS_NS_TABLE, DOMDocumentWrapper::qualifiedName(ODS_NSP_TABLE, ODS_ELEMENT_ROW));
 }
 
 ODSTableRow::ODSTableRow(const DomElement& rowNode)
@@ -101,18 +101,6 @@ void ODSTableRow::setRepeatCount(unsigned int value)
 {
     m_repeatCount = value;
     wstring s = to_wstring(m_repeatCount);
-    m_rowNode.setAttributeNS(ODS_NS_TABLE, ODS_ATTR_ROW_REP, DOMDocumentWrapper().WstringToDomString(s));
+    m_rowNode.setAttributeNS(ODS_NS_TABLE, DOMDocumentWrapper::qualifiedName(ODS_NSP_TABLE, ODS_ATTR_ROW_REP), DOMDocumentWrapper().WstringToDomString(s));
 }
 
-/*
-void ODSTableRow::copyTo(ODSTableRow& copy)
-{
-    copy.m_repeatCount = m_repeatCount;
-    copy.m_rowNode = DOMDocumentWrapper().toElement(m_rowNode.cloneNode(true));
-    copy.m_cells.clear();
-    for (ODSCell& cell : m_cells) {
-        copy.m_cells.emplace_back(cell);
-        //cell.copyTo(copy.m_cells.back());
-    }
-}
-*/

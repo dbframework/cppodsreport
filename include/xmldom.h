@@ -36,7 +36,8 @@ public:
     void clearContent();
     static DomElement toElement(const DomNode& node);
     static std::wstring DomStringToWstring(const DomString& str);
-    static DomString WstringToDomString(const std::wstring& str);
+    static DomString WstringToDomString(const std::wstring& str);    
+    static DomString qualifiedName(char* namespaceTag, char* name);
 };
 
 }
