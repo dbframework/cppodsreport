@@ -87,3 +87,14 @@ bool reportw(const wchar_t* fileName, cppodsreport::DataSource* dataSource, int 
     return result;
 }
 #endif
+
+ODFPackage* create()
+{
+    return new ODSFile;
+}
+
+void release(ODFPackage* p)
+{
+    if (nullptr != p)
+        delete p;
+}

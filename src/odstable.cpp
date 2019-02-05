@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Sidorov Dmitry
+Copyright (c) 2017-2019 Sidorov Dmitry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -16,6 +16,7 @@ NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
 WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.  
 */
+
 #include "odstable.h"
 #include "odsconst.h"
 #include "xmldom.h"
@@ -23,6 +24,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "odsformula.h"
 #include <string>
 #include <utility>
+#include <stdexcept>
+#include "odsfile.h"
 
 using namespace cppodsreport;
 using namespace std;
@@ -30,25 +33,38 @@ using namespace std;
 #define ODSTABLE_CMD_V L"V"
 #define ODSTABLE_CMD_H L"H"
 
-ODSTable::ODSTable()
+ODSTable::ODSTable(ODSFile* file)
 {    
+    m_file = file;
 }
 
 ODSTable::ODSTable(ODSTable&& val):
     m_cellRanges(move(val.m_cellRanges)),
     m_table(move(val.m_table)),
-    m_name(move(val.m_name))
+    m_name(move(val.m_name)),
+    m_tableVector(move(val.m_tableVector)),
+    m_tableMap(move(val.m_tableMap))
 {
     m_tableNode = val.m_tableNode;    
+    m_file = val.m_file;
 }
 
-ODSTable::ODSTable(const DomElement &tableNode)
+ODSTable::ODSTable(ODSFile* file, const DomElement &tableNode) 
 {    
     m_tableNode = tableNode;    
+    m_file = file;
     m_name = DOMDocumentWrapper::DomStringToWstring(m_tableNode.attributeNS(ODS_NS_TABLE, ODS_ATTR_NAME));
 }
 
-void ODSTable::addNodeListToLastRow(const DomNodeList& list, ODSTableMap &tables)
+ODSTable& ODSTable::tableByName(const std::wstring& name)
+{
+    auto i = m_tableMap->find(name);
+    if (i == m_tableMap->end())
+        throw out_of_range("Table not found");
+    return (*m_tableVector)[i->second];
+}
+
+void ODSTable::addNodeListToLastRow(const DomNodeList& list)
 {
     int cellCount = list.length();
     for (int j = 0; j < cellCount; ++j) {
@@ -62,7 +78,7 @@ void ODSTable::addNodeListToLastRow(const DomNodeList& list, ODSTableMap &tables
                         m_cellRanges.emplace_back(pr.get());
                     }
                     else {
-                        tables[pr->begin.sheet()].m_cellRanges.emplace_back(pr.get());
+                        tableByName(pr->begin.sheet()).m_cellRanges.emplace_back(pr.get());
                     }
                 }
             }
@@ -70,17 +86,19 @@ void ODSTable::addNodeListToLastRow(const DomNodeList& list, ODSTableMap &tables
     }
 }
 
-void ODSTable::parseTable(ODSTableMap &tables)
+void ODSTable::parseTable(ODSTableMap& tables, ODSTableVector& vector)
 {
+    m_tableMap = &tables;
+    m_tableVector = &vector;
     DomNodeList list = m_tableNode.elementsByTagNameNS(ODS_NS_TABLE, ODS_ELEMENT_ROW);
     int rowCount = list.length();
     if (rowCount) {
         m_table.clear();
         for (int i = 0; i < rowCount; ++i) {
             DomElement row = DOMDocumentWrapper::toElement(list.item(i).cloneNode(false));
-            m_table.emplace_back(row);                        
+            m_table.emplace_back(m_file->content().document() ,row);                        
             DomNodeList cells = list.item(i).childNodes();
-            addNodeListToLastRow(cells, tables);
+            addNodeListToLastRow(cells);
         }
     }    
 }
@@ -153,9 +171,10 @@ void ODSTable::parseText(Table::iterator& row, ODSTableRow::ODSCellList::iterato
 }
 
 
-void ODSTable::assignVars(DataSource* ds, ODSTableMap &tables)
+void ODSTable::assignVars(DataSource* ds, ODSTableMap& tables, ODSTableVector& vector)
 {
     m_tableMap = &tables;
+    m_tableVector = &vector;
     RowIndex rindex = 0;
     ColumnIndex cindex = 0;
     Table::iterator i = m_table.begin();
@@ -258,10 +277,10 @@ void ODSTable::copyCellsDown(Table::iterator row,  ODSTableRow::ODSCellList::ite
 
     Table::iterator i = last;
     advance(i,1);
-    unsigned int rowCount = 0;
+    RowIndex rowCount = 0;
     updateRowInCellRanges(rowIndex + height, height);
     do {
-        Table::iterator j = m_table.insert(i, ODSTableRow(DOMDocumentWrapper().toElement(row->rowNode().cloneNode(true))));
+        Table::iterator j = m_table.insert(i, ODSTableRow(m_file->content().document(), DOMDocumentWrapper().toElement(row->rowNode().cloneNode(true))));
         if (rowCount + j->repeatCount() > height) {
             j->setRepeatCount(height - rowCount);
         }
@@ -343,7 +362,7 @@ int ODSTable::rowRange(int height, Table::iterator first, Table::iterator& last)
                     unsigned int delta = rowCount - height;
                     Table::iterator i = last;
                     ++i;
-                    i = m_table.insert(i, ODSTableRow());
+                    i = m_table.insert(i, ODSTableRow(m_file->content().document()));
                     *i = *last;                    
                     i->setRepeatCount(delta);
                     last->setRepeatCount(last->repeatCount() - delta);
@@ -382,7 +401,7 @@ void ODSTable::updateRowInCellRange(ODSCell& cell, RowIndex startRow, int update
                     m_cellRanges.emplace_back(r.get());
                 }
                 else {
-                    (*m_tableMap)[r->begin.sheet()].m_cellRanges.emplace_back(r.get());
+                    tableByName(r->begin.sheet()).m_cellRanges.emplace_back(r.get());
                 }
             }
         }
@@ -399,4 +418,9 @@ void ODSTable::updateRowInCellRange(ODSCellRange* r, RowIndex startRow, int upda
             r->end.setRow(r->end.row() + updateValue);
         }
     }
+}
+
+ODSSheetCell& ODSTable::cell(ODSSize row, ODSSize col)
+{
+    return m_table.forceItem(row, m_file->content().document()).cells().forceItem(col, m_file->content().document());
 }

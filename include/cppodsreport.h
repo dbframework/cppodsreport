@@ -19,25 +19,9 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef CPPODSREPORT_H
 #define CPPODSREPORT_H
 
-#if defined(CPPODSREPORT_EXPORT)
-  #ifdef CPPODSREPORT_WIN
-    #define CPPODSREPORT_API __declspec(dllexport)
-  #else
-    #if __GNUC__ >= 4
-      #define CPPODSREPORT_API __attribute__ ((visibility ("default")))
-    #else
-      #define CPPODSREPORT_API
-    #endif
-  #endif //CPPODSREPORT_WIN
-#else
-  #ifdef CPPODSREPORT_WIN
-    #define CPPODSREPORT_API __declspec(dllimport)
-  #else
-    #define CPPODSREPORT_API      
-  #endif //CPPODSREPORT_WIN
-#endif
-
 #include "datasourceabstract.h"
+#include "cppodsreportexpdef.h"
+#include "cppodsreportcore.h"
 
 extern "C" {
     CPPODSREPORT_API bool report(const char* fileName, cppodsreport::DataSource* dataSource, int* intError, int* zipError, int* zlibError, int* sysError);
@@ -45,6 +29,32 @@ extern "C" {
     CPPODSREPORT_API bool reporta(const char* fileName, cppodsreport::DataSource* dataSource, int* intError, int* zipError, int* zlibError, int* sysError);
     CPPODSREPORT_API bool reportw(const wchar_t* fileName, cppodsreport::DataSource* dataSource, int* intError, int* zipError, int* zlibError, int* sysError);
 #endif
+
+    CPPODSREPORT_API cppodsreport::ODFPackage* create();
+    CPPODSREPORT_API void release(cppodsreport::ODFPackage* p);
 }
+
+namespace cppodsreport {
+
+class ODFPackageWrapper {
+private:
+    ODFPackage* m_ptr;
+public:
+    ODFPackageWrapper()
+    {
+        m_ptr = create();
+    };
+    ~ODFPackageWrapper()
+    {
+        if (m_ptr != nullptr)
+            release(m_ptr);
+    };
+    ODFPackage* operator()()
+    {
+        return m_ptr;
+    };
+};
+
+};
 
 #endif // CPPODSREPORT_H

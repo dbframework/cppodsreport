@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Sidorov Dmitry
+Copyright (c) 2017-2019 Sidorov Dmitry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -27,10 +27,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "xmldom.h"
 #include "odstable.h"
 #include "datasourceabstract.h"
+#include "cppodsreportcore.h"
 
 namespace cppodsreport {
 
-class ODSFile
+class ODSFile : public ODFPackage
 {
 private:
     ODSFile(ODSFile&){};
@@ -45,9 +46,9 @@ private:
     bool writeFile(const char* fileName, DOMDocumentWrapper &content, Buffer& buf);
 
     DOMDocumentWrapper m_content;
-
-    typedef std::vector<ODSTable> ODSTableVector;
+        
     ODSTable::ODSTableMap m_tables;
+    ODSTable::ODSTableVector m_tablesVector;
 
     void parseTables(const DomNodeList& tables);
     void parseContent();
@@ -74,6 +75,11 @@ public:
         int sysError;
     };
     void getLastError(ErrorStruct& error) const;
+
+    ODSSize sheetCount();
+    ODSSheet& sheet(ODSSize sheetIndex);
+
+    DOMDocumentWrapper& content();
 };
 
 };

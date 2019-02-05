@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(cppodsreport VERSION 1.0.2)
+project(cppodsreport VERSION 1.1.0)
 
 set(SRC_LIB src/cppodsreport.cpp 
             src/odsfile.cpp 
@@ -22,6 +22,11 @@ set(SRC_REPORT  src/report.cpp
                 src/xmldom.cpp
 )
 
+set(SRC_TEST test/main.cpp
+             test/cppodsreporttest.cpp
+             test/test3.cpp
+)
+
 #setup libzip paths
 find_library(ZIP_LIB zip)
 find_path(ZIP_H "zip.h")
@@ -35,7 +40,7 @@ else(WIN32 OR CYGWIN)
 endif(WIN32 OR CYGWIN)
 
 #find qt
-set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5Core REQUIRED)
 find_package(Qt5Xml REQUIRED)
@@ -59,3 +64,9 @@ target_link_libraries(report cppodsreport)
 target_link_libraries(cppodsreport Qt5::Core Qt5::Xml)
 set_property(TARGET report PROPERTY CXX_STANDARD 11)
 set_property(TARGET report PROPERTY CXX_STANDARD_REQUIRED ON)
+
+#test tool
+add_executable(testtool ${SRC_TEST})
+target_link_libraries(testtool cppodsreport)
+set_property(TARGET testtool PROPERTY CXX_STANDARD 11)
+set_property(TARGET testtool PROPERTY CXX_STANDARD_REQUIRED ON)

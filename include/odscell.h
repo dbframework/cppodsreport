@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Sidorov Dmitry
+Copyright (c) 2017-2019 Sidorov Dmitry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -21,10 +21,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "xmldom.h"
 #include "odsformula.h"
+#include "cppodsreportcore.h"
 
 namespace cppodsreport {
 
-class ODSCell
+class ODSCell : public ODSSheetCell
 {
 private:
     DomElement m_cellNode;
@@ -54,6 +55,9 @@ public:
     void setTextp(const std::wstring& text);
     void save();
     ODSFormulaSPtr formula() const;
+
+    const wchar_t* text() const;
+    void setText(const wchar_t* text);
 };
 
 }

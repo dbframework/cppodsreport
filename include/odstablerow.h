@@ -22,21 +22,25 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "xmldom.h"
 #include "odscell.h"
 #include <list>
+#include "repeateditems.h"
 
 namespace cppodsreport {
 
 class ODSTableRow
 {
 public:
-    typedef std::list<ODSCell> ODSCellList;
+    //typedef std::list<ODSCell> ODSCellList;
+    typedef RepeatedItems<ODSCell, DomDocument&> ODSCellList;
 private:
     DomElement m_rowNode;
     ODSCellList m_cells;
-    unsigned int m_repeatCount;    
+    size_t m_repeatCount;    
 public:    
-    ODSTableRow();
+    ODSTableRow() = delete;
     ODSTableRow(DomDocument& doc);
-    ODSTableRow(const DomElement& rowNode);
+    ODSTableRow(DomDocument& doc, const DomElement& rowNode);
+    ODSTableRow(const ODSTableRow&);
+    ODSTableRow& operator=(const ODSTableRow&);
     ODSCellList& cells();
     DomElement rowNode();
     /*!
@@ -47,8 +51,8 @@ public:
         @param[in] count Number of cells to copy. If it is zero all cells up to the end of the row will be copied.
     */
     void copyCells(ODSTableRow& destRow, ODSCellList::iterator where, ODSCellList::size_type index, ODSCellList::size_type count);
-    unsigned int repeatCount() const;
-    void setRepeatCount(unsigned int value);    
+    size_t repeatCount() const;
+    void setRepeatCount(size_t value);    
 };
 
 }

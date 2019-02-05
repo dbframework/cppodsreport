@@ -156,6 +156,12 @@ ODSFormulaSPtr ODSCell::formula() const
 void ODSCell::saveText()
 {
     DomNode textNode = getCellTextNode();
+
+    if (textNode.isNull() && !m_text.empty()) {
+        textNode = m_cellNode.appendChild(m_cellNode.ownerDocument().createElementNS(ODS_NS_TEXT, DOMDocumentWrapper::qualifiedName(ODS_NSP_TEXT, ODS_ELEMENT_TEXTP)));
+        textNode = textNode.appendChild(m_cellNode.ownerDocument().createTextNode(DomString()));
+    }
+
     if (textNode.nodeType() == NODE_TYPE_TEXT) {
         textNode.setNodeValue(DOMDocumentWrapper::WstringToDomString(m_text));
     }
@@ -178,4 +184,14 @@ void ODSCell::checkText()
     catch(std::exception& ){
 
     }
+}
+
+const wchar_t* ODSCell::text() const
+{
+    return m_text.c_str();
+}
+
+void ODSCell::setText(const wchar_t* text)
+{
+    setTextp(text);
 }

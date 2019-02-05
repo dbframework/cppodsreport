@@ -22,18 +22,18 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace cppodsreport;
 using namespace std;
 
-ODSTableRow::ODSTableRow()
+/*ODSTableRow::ODSTableRow()
 {
     m_repeatCount = 1;
-}
+}*/
 
-ODSTableRow::ODSTableRow(DomDocument& doc)
+ODSTableRow::ODSTableRow(DomDocument& doc) 
 {
     m_repeatCount = 1;
     m_rowNode = doc.createElementNS(ODS_NS_TABLE, DOMDocumentWrapper::qualifiedName(ODS_NSP_TABLE, ODS_ELEMENT_ROW));
 }
 
-ODSTableRow::ODSTableRow(const DomElement& rowNode)
+ODSTableRow::ODSTableRow(DomDocument& doc, const DomElement& rowNode) 
 {
     m_repeatCount = 1;
     m_rowNode = rowNode;
@@ -45,6 +45,21 @@ ODSTableRow::ODSTableRow(const DomElement& rowNode)
         if (idx < ws.size())
             m_repeatCount = 1;
     }
+}
+
+ODSTableRow::ODSTableRow(const ODSTableRow& r) 
+{
+    m_repeatCount = r.m_repeatCount;    
+    m_rowNode = DOMDocumentWrapper::toElement(r.m_rowNode.cloneNode());    
+    m_cells = r.m_cells;
+}
+
+ODSTableRow& ODSTableRow::operator=(const ODSTableRow& r)
+{
+    m_repeatCount = r.m_repeatCount;
+    m_cells = r.m_cells;
+    m_rowNode = DOMDocumentWrapper::toElement(r.m_rowNode.cloneNode());
+    return *this;
 }
 
 ODSTableRow::ODSCellList &ODSTableRow::cells()
@@ -92,12 +107,12 @@ void ODSTableRow::copyCells(ODSTableRow &destRow, ODSCellList::iterator where, O
      }
 }
 
-unsigned int ODSTableRow::repeatCount() const
+size_t ODSTableRow::repeatCount() const
 {
     return m_repeatCount;
 }
 
-void ODSTableRow::setRepeatCount(unsigned int value)
+void ODSTableRow::setRepeatCount(size_t value)
 {
     m_repeatCount = value;
     wstring s = to_wstring(m_repeatCount);

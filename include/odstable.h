@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Sidorov Dmitry
+Copyright (c) 2017-2019 Sidorov Dmitry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -28,23 +28,33 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "datasourceabstract.h"
 #include "parser.h"
 #include "odscellrange.h"
+#include "cppodsreportcore.h"
+#include "repeateditems.h"
 
 namespace cppodsreport {
 
+class ODSFile;
 
-class ODSTable
+class ODSTable : public ODSSheet
 {
 public:
-    typedef std::unordered_map<std::wstring, ODSTable> ODSTableMap;
+    //typedef std::unordered_map<std::wstring, ODSTable> ODSTableMap;
+    typedef std::vector<ODSTable> ODSTableVector;
+    typedef std::unordered_map<std::wstring, ODSTableVector::size_type> ODSTableMap;    
 private:
     DomElement m_tableNode;    
-    typedef std::list<ODSTableRow> Table;
+    //typedef std::list<ODSTableRow> Table;
+    typedef RepeatedItems<ODSTableRow, DomDocument&> Table;
     Table m_table;
     std::wstring m_name;
     ODSTableMap* m_tableMap;
+    ODSTableVector* m_tableVector;       
+    ODSFile* m_file;
 
     typedef std::vector<ODSCellRange*> CellRangeVector;
     CellRangeVector m_cellRanges;
+
+    ODSTable& tableByName(const std::wstring& name);
 
     typedef Table::size_type RowIndex;
     typedef ODSTableRow::ODSCellList::size_type ColumnIndex;    
@@ -60,19 +70,20 @@ private:
     void removeCells(bool down, Table::iterator& row, ODSTableRow::ODSCellList::iterator& col, RowIndex& rowIndex, ColumnIndex& colIndex, int height, int width);
     void removeRows(Table::iterator& row, ODSTableRow::ODSCellList::iterator& col, RowIndex& rowIndex, ColumnIndex& colIndex, int height);
     int rowRange(int height, Table::iterator first, Table::iterator& last);
-    void addNodeListToLastRow(const DomNodeList& list, ODSTableMap& tables);
+    void addNodeListToLastRow(const DomNodeList& list);
     void updateRowInCellRanges(RowIndex startRow, int updateValue);
     void updateRowInCellRange(ODSCell& cell, RowIndex startRow, int updateValue);
     void updateRowInCellRange(ODSCellRange *r, RowIndex startRow, int updateValue);
 public:    
-    ODSTable();
+    ODSTable() = delete;
+    ODSTable(ODSFile* file);
     ODSTable(ODSTable&& val);
-    ODSTable(const DomElement& tableNode);    
-    void parseTable(ODSTableMap& tables);
-    void assignVars(DataSource* ds, ODSTableMap& tables);
+    ODSTable(ODSFile* file, const DomElement& tableNode);    
+    void parseTable(ODSTableMap& tables, ODSTableVector& vector);
+    void assignVars(DataSource* ds, ODSTableMap& tables, ODSTableVector& vector);
     void save();
     std::wstring name() const;
-
+    ODSSheetCell& cell(ODSSize row, ODSSize col);
 };
 
 

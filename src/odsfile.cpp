@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Sidorov Dmitry
+Copyright (c) 2017-2019 Sidorov Dmitry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -129,6 +129,7 @@ bool ODSFile::close()
         setError(ODSERR_ARCH_SAVE, true);
     m_content.clearContent();
     m_tables.clear();
+    m_tablesVector.clear();
     m_isOpen = false;
     return result;
 }
@@ -143,9 +144,11 @@ bool ODSFile::save()
         return result;
     }
 
-    for (pair<const wstring, ODSTable> &t : m_tables) {
+    for (ODSTable &t : m_tablesVector)
+        t.save();
+    /*for (pair<const wstring, ODSTable> &t : m_tables) {
         t.second.save();
-    }
+    }*/
     DomNodeList doccont = m_content.document().elementsByTagNameNS(ODS_NS_OFFICE, ODS_ELEMENT_DOC_CONTENT);
     if (doccont.length()) {
         DomElement elem = m_content.toElement(doccont.item(0));
@@ -155,6 +158,7 @@ bool ODSFile::save()
         elem.setAttribute(xmlns + ODS_NSP_TABLE, ODS_NS_TABLE);
         elem.setAttribute(xmlns + ODS_NSP_SCRIPT, ODS_NS_SCRIPT);
         elem.setAttribute(xmlns + ODS_NSP_OF, ODS_NS_OF);
+        elem.setAttribute(xmlns + ODS_NSP_STYLE_XSL_COMP, ODS_NS_STYLE_XSL_COMP);
     }
     result = writeFile(ODSFILE_CONTENT_FILE_NAME, m_content, m_contentBuf);
     if (!result) {
@@ -189,14 +193,20 @@ void ODSFile::parseTables(const DomNodeList& tables)
 {
     m_tables.clear();
     m_tables.reserve(tables.length());
+    m_tablesVector.clear();
+    m_tablesVector.reserve(tables.length());
     for (int i = 0; i < tables.length(); ++i) {
-         ODSTable t(m_content.toElement(tables.item(i)));
-		 ODSTable::ODSTableMap::value_type val;		 
-		 m_tables.insert(make_pair(t.name(), std::move(t)));         
+        m_tablesVector.push_back(ODSTable(this, m_content.toElement(tables.item(i))));
+        m_tables.insert(make_pair(m_tablesVector.back().name(), m_tablesVector.size() - 1));
+         //ODSTable t(m_content.toElement(tables.item(i)));
+		 //ODSTable::ODSTableMap::value_type val;		 
+		 //m_tables.insert(make_pair(t.name(), std::move(t)));         
     }
-    for (pair<const wstring, ODSTable> &t : m_tables) {
+    for (ODSTable &t : m_tablesVector)
+        t.parseTable(m_tables, m_tablesVector);
+    /*for (pair<const wstring, ODSTable> &t : m_tables) {
         t.second.parseTable(m_tables);
-    }
+    }*/
 }
 
 bool ODSFile::process(DataSource* ds)
@@ -205,9 +215,11 @@ bool ODSFile::process(DataSource* ds)
         setError(ODSERR_DS_NULL, false);
         return false;
     }
-    for (pair<const wstring, ODSTable> &t : m_tables) {
+    for (ODSTable &t : m_tablesVector)
+        t.assignVars(ds, m_tables, m_tablesVector);
+    /*for (pair<const wstring, ODSTable> &t : m_tables) {
         t.second.assignVars(ds, m_tables);
-    }
+    }*/
     return true;
 }
 
@@ -229,4 +241,19 @@ void ODSFile::getLastError(ErrorStruct& error) const
     else {
         error.internalError2 = error.sysError = error.zipError = error.zlibError = 0;
     }
+}
+
+ODSSize ODSFile::sheetCount()
+{
+    return m_tablesVector.size();
+}
+
+ODSSheet& ODSFile::sheet(ODSSize sheetIndex)
+{
+    return m_tablesVector[sheetIndex];
+}
+
+DOMDocumentWrapper& ODSFile::content()
+{
+    return m_content;
 }

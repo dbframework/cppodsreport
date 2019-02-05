@@ -27,6 +27,7 @@ namespace cppodsreport {
 #define ODS_NS_SCRIPT "urn:oasis:names:tc:opendocument:xmlns:script:1.0"
 #define ODS_NS_OF "urn:oasis:names:tc:opendocument:xmlns:of:1.2"
 #define ODS_NS_STYLE "urn:oasis:names:tc:opendocument:xmlns:style:1.0"
+#define ODS_NS_STYLE_XSL_COMP "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
 
 #define ODS_NSP_OFFICE "office"
 #define ODS_NSP_TABLE "table"
@@ -34,6 +35,7 @@ namespace cppodsreport {
 #define ODS_NSP_SCRIPT "script"
 #define ODS_NSP_OF "of"
 #define ODS_NSP_STYLE "style"
+#define ODS_NSP_STYLE_XSL_COMP "fo"
 
 #define ODS_ELEMENT_TABLE "table"
 #define ODS_ELEMENT_ROW "table-row"

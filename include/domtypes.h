@@ -45,7 +45,7 @@ public:
     DomString  getAttributeNS(DomString namespaceURI, DomString localName)
     {
         return attributeNS(namespaceURI, localName);
-    }
+    }    
 };
 
 
