@@ -17,47 +17,23 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef CPPODSREPORTCORE_H
-#define CPPODSREPORTCORE_H
+#ifndef TESTSAVE_H
+#define TESTSAVE_H
 
-#include "cppodsreportexpdef.h"
-#include "datasourceabstract.h"
+#include "cppodsreporttest.h"
+#include <string>
 
 namespace cppodsreport {
 
-typedef size_t ODSSize;
-
-class ODSSheetCell {
+class TestSave : public TestAbstract {
+private:
+    std::string m_path;
+    void fail(const std::string& msg) const;
 public:
-    virtual const wchar_t* text() const = 0;
-    virtual void setText(const wchar_t* text) = 0;
+    TestSave(const std::string& path);
+    void run();
 };
 
-class ODSSheet {
-public:
-    virtual ODSSheetCell& cell(ODSSize row, ODSSize col) = 0;
-};
+}
 
-class ODFPackage {
-public:      
-    virtual bool open(const char* fileName) = 0;
-    virtual bool save(const char* fileName) = 0;
-#ifdef CPPODSREPORT_WIN
-    virtual bool opena(const char* fileName) = 0;
-    virtual bool open(const wchar_t* fileName) = 0;
-    virtual bool savea(const char* fileName) = 0;
-    virtual bool save(const wchar_t* fileName) = 0;
-#endif
-    virtual bool process(DataSource* ds) = 0;
-    virtual bool save() = 0;
-    virtual bool close() = 0;
-    
-    
-    virtual ODSSize sheetCount() = 0;
-    virtual ODSSheet& sheet(ODSSize sheetIndex) = 0;
-};
-
-
-}//namespace
-
-#endif //CPPODSREPORTCORE_H
+#endif //TESTSAVE_H

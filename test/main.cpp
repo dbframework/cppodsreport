@@ -20,6 +20,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "cppodsreport.h"
 #include "test3.h"
 #include <iostream>
+#include "testsave.h"
 
 using namespace cppodsreport;
 using namespace std;
@@ -32,4 +33,5 @@ int main(int argc, char* argv[])
     }
 
     Test3(path).run();
+    TestSave(path).run();
 }

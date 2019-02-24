@@ -56,13 +56,20 @@ private:
     std::unique_ptr<char[]> m_contentBuf;
     bool doOpen();
     void setError(int error = 0, bool zipError = false);
+    bool doSave(bool createRes);
+    void prepareSave();
+
+    bool createMIMETypeFile();
 public:
     ODSFile();
     ~ODSFile();
     bool open(const char* fileName);
+    bool save(const char* fileName);
 #ifdef CPPODSREPORT_WIN
     bool opena(const char* fileName);
     bool open(const wchar_t* fileName);
+    bool savea(const char* fileName);
+    bool save(const wchar_t* fileName);
 #endif
     bool process(DataSource* ds);
     bool save();
@@ -80,6 +87,8 @@ public:
     ODSSheet& sheet(ODSSize sheetIndex);
 
     DOMDocumentWrapper& content();
+
+    
 };
 
 };

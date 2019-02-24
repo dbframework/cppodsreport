@@ -25,6 +25,7 @@ set(SRC_REPORT  src/report.cpp
 set(SRC_TEST test/main.cpp
              test/cppodsreporttest.cpp
              test/test3.cpp
+             test/testsave.cpp    
 )
 
 #setup libzip paths

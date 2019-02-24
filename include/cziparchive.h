@@ -48,6 +48,22 @@ public:
         ERR_WRITE_EXTRACTED = 2,
         ERR_NULL_ZIPSRC =3
     };
+
+    static const int opCreate;
+    static const int opFailIfExists;
+    static const int opStrictCheck;
+    static const int opTruncate;
+    static const int opReadOnly;
+
+    enum CompressionAlgorithm {
+        caDefault = ZIP_CM_DEFAULT,
+        caStore = ZIP_CM_STORE,
+        caDeflate = ZIP_CM_DEFLATE,
+        caBZip2 = ZIP_CM_BZIP2
+    };
+    
+    typedef zip_uint32_t ZipUInt32;
+
     /*!
         Creates an object.
     */
@@ -59,22 +75,25 @@ public:
     /*!
         This function opens the archive.
         @param[in] fileName The archve file name in UTF-8 encoding.
+        @param[in] options Options for opening file, or-ed combination of opCreate, opFailIfExists, opStrictCheck, opTruncate, opReadOnly.
         @return True if success.
     */
-    bool open(const char* fileName);
+    bool open(const char* fileName, int options = 0);
 #ifdef CPPODSREPORT_WIN
     /*!
         This function opens the archive.
         @param[in] fileName The archve file name in ANSI encoding.
+        @param[in] options Options for opening file, or-ed combination of opCreate, opFailIfExists, opStrictCheck, opTruncate, opReadOnly.
         @return True if success.
     */
-    bool opena(const char* fileName);
+    bool opena(const char* fileName, int options = 0);
     /*!
         This function opens the archive.
         @param[in] fileName The archve file name in UTF-8 encoding.
+        @param[in] options Options for opening file, or-ed combination of opCreate, opFailIfExists, opStrictCheck, opTruncate, opReadOnly.
         @return True if success.
     */
-    bool open(const wchar_t* fileName);
+    bool open(const wchar_t* fileName, int options = 0);
 #endif
     /*!
         This function checks if the archive is already opened.
@@ -94,18 +113,18 @@ public:
      */
     bool extractFile(const char* fileInZipName, const char* fileName);
     /*!
+    ZipInt is the shortcut for zip_int64_t type.
+    */
+    typedef zip_int64_t ZipInt;
+    /*!
         This function adds file to the archive. The archive must be opened.
         @param[in] fileName Name of the file to add to the  archive.
         @param[in] fileInZipName Name of the file in the archive.
         @param[in] replaceIfExists If true and fileInZipName already exists then it will be replaced.
             Otherwise function fails.
-        @return True if success.
+        @return Index of the file in the archive if success, -1 otherwise.
      */
-    bool addFile(const char* fileName, const char* fileInZipName, bool replaceIfExists);
-    /*!
-        ZipInt is the shortcut for zip_int64_t type.
-     */
-    typedef zip_int64_t ZipInt;
+    ZipInt addFile(const char* fileName, const char* fileInZipName, bool replaceIfExists);    
     /*!
         This function adds file to the archive. The archive must be opened.
         @param[in] content Pointer to the buffer with file content.
@@ -113,9 +132,9 @@ public:
         @param[in] fileInZipName Name of the file in the archive.
         @param[in] replaceIfExists If true and fileInZipName already exists then it will be replaced.
             Otherwise function fails.
-        @return True if success.
+        @return Index of the file in the archive if success, -1 otherwise.
      */
-    bool addFile(const void* content, ZipInt size, const char* fileInZipName, bool replaceIfExists);
+    ZipInt addFile(const void* content, ZipInt size, const char* fileInZipName, bool replaceIfExists);
     /*!
         The findFileInZip method finds file inside the archive.
         @param[in] fileInZipName File name.
@@ -172,10 +191,23 @@ public:
          @return Internal CZipArchive error.
     */
     int internalError() const;
+    /*!
+        Set compression type of the file in the archive.
+        @param[in] fileIndex File index.
+        @parm[in] algorithm Compression algorithm.
+        @parm[in] level Compression level in [1,9] or 0 for default level. 
+        @return True if success.
+    */
+    bool setCompression(ZipInt fileIndex, CompressionAlgorithm algorithm = caDefault, ZipUInt32 level = 0);
+    /*!
+        Cancel all changes made to archive.
+        @return true if success.
+    */
+    bool unchange_all();
 private:
-    bool addFile(zip_source_t* src, const char* fileInZipName, bool replaceIfExists);
+    ZipInt addFile(zip_source_t* src, const char* fileInZipName, bool replaceIfExists);
 #ifdef CPPODSREPORT_WIN
-    bool openFromSource(zip_source_t* src);
+    bool openFromSource(zip_source_t* src, int options);
 #endif
     void clearErrors();    
     bool checkOpened();

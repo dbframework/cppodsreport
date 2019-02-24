@@ -21,6 +21,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using namespace cppzip;
 
+const int CZipArchive::opCreate = 1;
+const int CZipArchive::opFailIfExists = 2;
+const int CZipArchive::opStrictCheck = 4;
+const int CZipArchive::opTruncate = 8;
+const int CZipArchive::opReadOnly = 16;
+
 CZipArchive::CZipArchive()
 {
     m_zip = nullptr;
@@ -31,11 +37,11 @@ CZipArchive::~CZipArchive()
     close();
 }
 
-bool CZipArchive::open(const char* fileName)
+bool CZipArchive::open(const char* fileName, int options)
 {
     close();
     int error;
-    m_zip = zip_open(fileName, 0, &error);
+    m_zip = zip_open(fileName, options, &error);
     if (m_zip == nullptr)
         setZipError(error);
 
@@ -43,10 +49,10 @@ bool CZipArchive::open(const char* fileName)
 }
 
 #ifdef CPPODSREPORT_WIN
-bool CZipArchive::openFromSource(zip_source_t* src)
+bool CZipArchive::openFromSource(zip_source_t* src, int options)
 {
     close();    
-    m_zip = zip_open_from_source(src, 0, zip_source_error(src));
+    m_zip = zip_open_from_source(src, options, zip_source_error(src));
     if (m_zip == nullptr) {
         setZipError(zip_source_error(src));
         zip_source_close(src);
@@ -54,11 +60,11 @@ bool CZipArchive::openFromSource(zip_source_t* src)
     return (m_zip != nullptr);
 }
 
-bool CZipArchive::opena(const char* fileName)
+bool CZipArchive::opena(const char* fileName, int options)
 {    
     zip_source_t* src = zip_source_win32a_create(fileName, 0, 0, nullptr);
     if (src != nullptr) {
-        return openFromSource(src);
+        return openFromSource(src, options);
     }
     else {
         setInternalError(ERR_NULL_ZIPSRC);
@@ -66,11 +72,11 @@ bool CZipArchive::opena(const char* fileName)
     }
 }
 
-bool CZipArchive::open(const wchar_t* fileName)
+bool CZipArchive::open(const wchar_t* fileName, int options)
 {    
     zip_source_t* src = zip_source_win32w_create(fileName, 0, 0, nullptr);
     if (src != nullptr) {
-        return openFromSource(src);
+        return openFromSource(src, options);
     }
     else {
         setInternalError(ERR_NULL_ZIPSRC);
@@ -91,6 +97,7 @@ bool CZipArchive::close()
     if (m_zip) {
         if(0 != zip_close(m_zip)) {
             setZipError(zip_get_error(m_zip));
+            zip_discard(m_zip);
             result = false;            
         }
         m_zip = nullptr;
@@ -152,58 +159,52 @@ bool CZipArchive::extractFile(const char* fileName, const char* newName)
     return result;
 }
 
-bool CZipArchive::addFile(const char* fileName, const char* fileInZipName, bool replaceIfExists)
+CZipArchive::ZipInt CZipArchive::addFile(const char* fileName, const char* fileInZipName, bool replaceIfExists)
 {
     if (!checkOpened())
-        return false;
+        return -1;
 
-    bool result = true;
+    ZipInt result = -1;
 
     zip_source_t* source = zip_source_file(m_zip, fileName, 0, 0);
-    if (source == nullptr) {
-        result = false;
+    if (source == nullptr) {        
         setZipError(zip_get_error(m_zip));
     }
-
-    if (result) {
+    else {
         result = addFile(source, fileInZipName, replaceIfExists);
     }
 
     return result;
 }
 
-bool CZipArchive::addFile(const void *content, ZipInt size, const char* fileInZipName, bool replaceIfExists)
+CZipArchive::ZipInt CZipArchive::addFile(const void *content, ZipInt size, const char* fileInZipName, bool replaceIfExists)
 {
     if (!checkOpened())
-        return false;
+        return -1;
 
-    bool result = true;
+    ZipInt result = -1;
 
     zip_source_t* source = zip_source_buffer(m_zip, content, size, 0);
-    if (source == nullptr) {
-        result = false;
+    if (source == nullptr) {        
         setZipError(zip_get_error(m_zip));
     }
-
-    if (result) {
-        result = addFile(source, fileInZipName, replaceIfExists);
+    else {
+        result = addFile(source, fileInZipName, replaceIfExists);        
     }
 
     return result;
 }
 
-bool CZipArchive::addFile(zip_source_t* src, const char* fileInZipName, bool replaceIfExists)
+CZipArchive::ZipInt CZipArchive::addFile(zip_source_t* src, const char* fileInZipName, bool replaceIfExists)
 {
-    bool result = true;
+    ZipInt result = -1;
 
-    if (src == nullptr) {
-        result = false;
+    if (src == nullptr) {        
         setInternalError(ERR_NULL_ZIPSRC);
     }
-
-    if (result) {
-        if (zip_file_add(m_zip, fileInZipName, src, replaceIfExists ? ZIP_FL_OVERWRITE : 0) < 0) {
-            result = false;
+    else {
+        result = zip_file_add(m_zip, fileInZipName, src, replaceIfExists ? ZIP_FL_OVERWRITE : 0);
+        if (result < 0) {            
             zip_source_free(src);
             setZipError(zip_get_error(m_zip));
         }
@@ -341,4 +342,29 @@ int CZipArchive::sysError() const
 int CZipArchive::internalError() const
 {
     return m_internalError;
+}
+
+bool CZipArchive::setCompression(ZipInt fileIndex, CompressionAlgorithm algorithm, ZipUInt32 level)
+{
+    bool result = false;
+
+    if (!checkOpened())
+        return result;
+            
+    result = !zip_set_file_compression(m_zip, fileIndex, algorithm, level);
+    if (!result)
+        setZipError(zip_get_error(m_zip));
+
+    return result;
+}
+
+bool CZipArchive::unchange_all()
+{
+    bool result = false;
+
+    result = !zip_unchange_all(m_zip);
+    if (!result)
+        setZipError(zip_get_error(m_zip));
+
+    return result;
 }

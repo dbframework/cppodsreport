@@ -26,6 +26,9 @@ using namespace cppzip;
 using namespace std;
 
 #define ODSFILE_CONTENT_FILE_NAME "content.xml"
+#define ODSFILE_MIMETYPE_FILE_NAME "mimetype"
+
+const char* MIMETypeSpreadsheet = "application/vnd.oasis.opendocument.spreadsheet";
 
 ODSFile::ODSFile()
 {
@@ -125,8 +128,9 @@ bool ODSFile::open(const wchar_t* fileName)
 bool ODSFile::close()
 {    
     bool result = m_zip.close();
-    if (!result)
-        setError(ODSERR_ARCH_SAVE, true);
+    if (!result) {
+        setError(ODSERR_ARCH_SAVE, true);        
+    }
     m_content.clearContent();
     m_tables.clear();
     m_tablesVector.clear();
@@ -175,7 +179,7 @@ bool ODSFile::writeFile(const char* fileName, DOMDocumentWrapper &content, Buffe
     int size = content.contentSize();
     buf.reset(new char[size]);
     if (size == content.getContent(buf.get(), size)) {
-        result = m_zip.addFile(buf.get(), size, fileName, true);
+        result = (m_zip.addFile(buf.get(), size, fileName, true) >= 0);
         if (!result)
             setError(0, true);
     }
@@ -256,4 +260,70 @@ ODSSheet& ODSFile::sheet(ODSSize sheetIndex)
 DOMDocumentWrapper& ODSFile::content()
 {
     return m_content;
+}
+
+void ODSFile::prepareSave()
+{
+    setError();
+    if (m_isOpen) {
+        m_zip.close();
+        m_isOpen = false;
+    }
+}
+
+bool ODSFile::save(const char* fileName)
+{    
+    bool result = false;
+
+    result = m_zip.open(fileName, CZipArchive::opCreate | CZipArchive::opFailIfExists);
+
+    return doSave(result);
+}
+
+#ifdef CPPODSREPORT_WIN
+bool ODSFile::savea(const char* fileName)
+{
+    bool result = false;
+
+    result = m_zip.opena(fileName, CZipArchive::opCreate | CZipArchive::opFailIfExists);
+
+    return doSave(result);
+}
+
+
+bool ODSFile::save(const wchar_t* fileName)
+{
+    bool result = false;
+
+    result = m_zip.open(fileName, CZipArchive::opCreate | CZipArchive::opFailIfExists);
+
+    return doSave(result);
+}
+#endif
+
+bool ODSFile::doSave(bool createRes)
+{
+    bool result = createRes;
+
+    if (result)
+        result = createMIMETypeFile();
+
+    if (!result) {        
+        m_zip.unchange_all();
+        close();
+        setError(ODSERR_ARCH_CREATE, true);
+    }
+
+    return result;
+}
+
+bool ODSFile::createMIMETypeFile()
+{
+    bool result = false;
+    CZipArchive::ZipInt index = m_zip.addFile(MIMETypeSpreadsheet, strlen(MIMETypeSpreadsheet), ODSFILE_MIMETYPE_FILE_NAME, true);
+    if (index >= 0) {
+        result = m_zip.setCompression(index, CZipArchive::caStore);
+    }
+
+    return result;
 }

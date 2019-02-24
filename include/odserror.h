@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Sidorov Dmitry
+Copyright (c) 2017-2019 Sidorov Dmitry
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software
 and associated documentation files (the "Software"), to deal in the Software without restriction, 
@@ -27,6 +27,7 @@ namespace cppodsreport {
 #define ODSERR_CONTENT_WRITE 1003
 #define ODSERR_ARCH_SAVE 1004
 #define ODSERR_DS_NULL 1005
+#define ODSERR_ARCH_CREATE 1006
 
 }
 
