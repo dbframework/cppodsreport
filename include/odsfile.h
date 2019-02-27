@@ -58,8 +58,10 @@ private:
     void setError(int error = 0, bool zipError = false);
     bool doSave(bool createRes);
     void prepareSave();
+    bool commonSave();
 
-    bool createMIMETypeFile();
+    bool createMIMETypeFile();    
+    bool createContent();
 public:
     ODSFile();
     ~ODSFile();

@@ -36,7 +36,7 @@ class DomElement : public QDomElement
 {
 public:
     DomElement():QDomElement(){};
-    DomElement(const DomElement & x):QDomElement(x){};
+    DomElement(const QDomElement & x):QDomElement(x){};
     DomElement& operator=(const QDomElement& x)
     {
         QDomElement::operator =(x);
@@ -45,7 +45,7 @@ public:
     DomString  getAttributeNS(DomString namespaceURI, DomString localName)
     {
         return attributeNS(namespaceURI, localName);
-    }    
+    }        
 };
 
 

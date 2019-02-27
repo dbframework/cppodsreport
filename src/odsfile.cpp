@@ -138,21 +138,10 @@ bool ODSFile::close()
     return result;
 }
 
-bool ODSFile::save()
+bool ODSFile::commonSave()
 {
-    setError();
     bool result = false;
 
-    if(!m_isOpen) {
-        setError(ODSERR_NOT_OPENED, false);
-        return result;
-    }
-
-    for (ODSTable &t : m_tablesVector)
-        t.save();
-    /*for (pair<const wstring, ODSTable> &t : m_tables) {
-        t.second.save();
-    }*/
     DomNodeList doccont = m_content.document().elementsByTagNameNS(ODS_NS_OFFICE, ODS_ELEMENT_DOC_CONTENT);
     if (doccont.length()) {
         DomElement elem = m_content.toElement(doccont.item(0));
@@ -163,13 +152,41 @@ bool ODSFile::save()
         elem.setAttribute(xmlns + ODS_NSP_SCRIPT, ODS_NS_SCRIPT);
         elem.setAttribute(xmlns + ODS_NSP_OF, ODS_NS_OF);
         elem.setAttribute(xmlns + ODS_NSP_STYLE_XSL_COMP, ODS_NS_STYLE_XSL_COMP);
+        elem.setAttribute(xmlns + ODS_NSP_DRAW, ODS_NS_DRAW);
+        elem.setAttribute(xmlns + ODS_NSP_XLINK, ODS_NS_XLINK);
+        elem.setAttribute(xmlns + ODS_NSP_DC, ODS_NS_DC);
+        elem.setAttribute(xmlns + ODS_NSP_META, ODS_NS_META);
+        elem.setAttribute(xmlns + ODS_NSP_NUMBER, ODS_NS_NUMBER);
+        elem.setAttribute(xmlns + ODS_NSP_PRESENTATION, ODS_NS_PRESENTATION);
+        elem.setAttribute(xmlns + ODS_NSP_SVG, ODS_NS_SVG);
+        elem.setAttribute(xmlns + ODS_NSP_CHART, ODS_NS_CHART);
+        elem.setAttribute(xmlns + ODS_NSP_DR3D, ODS_NS_DR3D);
+        elem.setAttribute(xmlns + ODS_NSP_MATH, ODS_NS_MATH);
+        elem.setAttribute(xmlns + ODS_NSP_FORM, ODS_NS_FORM);
     }
+
+    for (ODSTable &t : m_tablesVector)
+        t.save();
+
     result = writeFile(ODSFILE_CONTENT_FILE_NAME, m_content, m_contentBuf);
     if (!result) {
         setError(ODSERR_CONTENT_WRITE, m_zipError);
     }
 
     return result;
+}
+
+bool ODSFile::save()
+{
+    setError();
+    bool result = false;
+
+    if(!m_isOpen) {
+        setError(ODSERR_NOT_OPENED, false);
+        return result;
+    }         
+            
+    return commonSave();
 }
 
 bool ODSFile::writeFile(const char* fileName, DOMDocumentWrapper &content, Buffer &buf)
@@ -275,6 +292,7 @@ bool ODSFile::save(const char* fileName)
 {    
     bool result = false;
 
+    prepareSave();
     result = m_zip.open(fileName, CZipArchive::opCreate | CZipArchive::opFailIfExists);
 
     return doSave(result);
@@ -285,6 +303,7 @@ bool ODSFile::savea(const char* fileName)
 {
     bool result = false;
 
+    prepareSave();
     result = m_zip.opena(fileName, CZipArchive::opCreate | CZipArchive::opFailIfExists);
 
     return doSave(result);
@@ -295,6 +314,7 @@ bool ODSFile::save(const wchar_t* fileName)
 {
     bool result = false;
 
+    prepareSave();
     result = m_zip.open(fileName, CZipArchive::opCreate | CZipArchive::opFailIfExists);
 
     return doSave(result);
@@ -305,13 +325,21 @@ bool ODSFile::doSave(bool createRes)
 {
     bool result = createRes;
 
+    m_isOpen = createRes;
+
     if (result)
         result = createMIMETypeFile();
+    
+    if (result && !m_content.contentSize())
+        result = createContent();
 
     if (!result) {        
         m_zip.unchange_all();
         close();
         setError(ODSERR_ARCH_CREATE, true);
+    }
+    else {
+        commonSave();
     }
 
     return result;
@@ -326,4 +354,19 @@ bool ODSFile::createMIMETypeFile()
     }
 
     return result;
+}
+
+bool ODSFile::createContent()
+{    
+    DomElement el = DOMDocumentWrapper::toElement(m_content.document().appendChild(m_content.document().createElementNS(ODS_NS_OFFICE, 
+        DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_DOC_CONTENT))));
+    el.setAttributeNS(ODS_NS_OFFICE, DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ATTR_VERSION), "1.2");
+
+    el = DOMDocumentWrapper::toElement(el.appendChild(m_content.document().createElementNS(ODS_NS_OFFICE,
+        DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_BODY))));
+
+    el = DOMDocumentWrapper::toElement(el.appendChild(m_content.document().createElementNS(ODS_NS_OFFICE,
+        DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_SPREADSHEET))));
+
+    return true;
 }
