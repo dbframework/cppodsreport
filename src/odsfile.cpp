@@ -25,9 +25,6 @@ using namespace cppodsreport;
 using namespace cppzip;
 using namespace std;
 
-#define ODSFILE_CONTENT_FILE_NAME "content.xml"
-#define ODSFILE_MIMETYPE_FILE_NAME "mimetype"
-
 const char* MIMETypeSpreadsheet = "application/vnd.oasis.opendocument.spreadsheet";
 
 ODSFile::ODSFile()
@@ -218,16 +215,10 @@ void ODSFile::parseTables(const DomNodeList& tables)
     m_tablesVector.reserve(tables.length());
     for (int i = 0; i < tables.length(); ++i) {
         m_tablesVector.push_back(ODSTable(this, m_content.toElement(tables.item(i))));
-        m_tables.insert(make_pair(m_tablesVector.back().name(), m_tablesVector.size() - 1));
-         //ODSTable t(m_content.toElement(tables.item(i)));
-		 //ODSTable::ODSTableMap::value_type val;		 
-		 //m_tables.insert(make_pair(t.name(), std::move(t)));         
+        m_tables.insert(make_pair(m_tablesVector.back().name(), m_tablesVector.size() - 1));         
     }
     for (ODSTable &t : m_tablesVector)
-        t.parseTable(m_tables, m_tablesVector);
-    /*for (pair<const wstring, ODSTable> &t : m_tables) {
-        t.second.parseTable(m_tables);
-    }*/
+        t.parseTable(m_tables, m_tablesVector);    
 }
 
 bool ODSFile::process(DataSource* ds)
@@ -238,9 +229,7 @@ bool ODSFile::process(DataSource* ds)
     }
     for (ODSTable &t : m_tablesVector)
         t.assignVars(ds, m_tables, m_tablesVector);
-    /*for (pair<const wstring, ODSTable> &t : m_tables) {
-        t.second.assignVars(ds, m_tables);
-    }*/
+    
     return true;
 }
 
@@ -333,6 +322,9 @@ bool ODSFile::doSave(bool createRes)
     if (result && !m_content.contentSize())
         result = createContent();
 
+    if (result)
+        result = createRDFMetadata();
+
     if (!result) {        
         m_zip.unchange_all();
         close();
@@ -358,15 +350,46 @@ bool ODSFile::createMIMETypeFile()
 
 bool ODSFile::createContent()
 {    
-    DomElement el = DOMDocumentWrapper::toElement(m_content.document().appendChild(m_content.document().createElementNS(ODS_NS_OFFICE, 
+    DomElement el = DOMDocumentWrapper::toElement(m_content.document().appendChild(m_content.document().createElement(ODS_ELEMENT_XML)));
+    el.setAttribute(ODS_ATTR_VERSION, "1.0");
+
+    el = DOMDocumentWrapper::toElement(m_content.document().appendChild(m_content.document().createElementNS(ODS_NS_OFFICE, 
         DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_DOC_CONTENT))));
     el.setAttributeNS(ODS_NS_OFFICE, DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ATTR_VERSION), "1.2");
 
     el = DOMDocumentWrapper::toElement(el.appendChild(m_content.document().createElementNS(ODS_NS_OFFICE,
         DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_BODY))));
 
-    el = DOMDocumentWrapper::toElement(el.appendChild(m_content.document().createElementNS(ODS_NS_OFFICE,
-        DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_SPREADSHEET))));
+    el = DOMDocumentWrapper::toElement(el.appendChild(m_content.document().createElementNS(ODS_NS_RDF,
+        DOMDocumentWrapper::qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_SPREADSHEET))));
 
     return true;
+}
+
+bool ODSFile::createRDFMetadata()
+{
+    DOMDocumentWrapper rdf;
+
+    DomElement el = rdf.toElement(rdf.document().appendChild(rdf.document().createElement(ODS_ELEMENT_XML)));
+    el.setAttribute(ODS_ATTR_VERSION, "1.0");
+
+    DomElement root = DOMDocumentWrapper::toElement(rdf.document().appendChild(rdf.document().createElementNS(ODS_NS_OFFICE,
+        DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_RDF))));
+
+    el = rdf.toElement(root.appendChild(rdf.document().createElementNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_RDF_DESC))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_ABOUT), ODSFILE_CONTENT_FILE_NAME);
+    el = rdf.toElement(el.appendChild(rdf.document().createElementNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_RDF_TYPE))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_RESOURCE), ODS_RDF_RESOURCE_CONTENT);
+
+    el = rdf.toElement(root.appendChild(rdf.document().createElementNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_RDF_DESC))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_ABOUT), "");
+    el = rdf.toElement(el.appendChild(rdf.document().createElementNS(ODS_NS_RDF_NS0, rdf.qualifiedName(ODS_NSP_RDF_NS0, ODS_ELEMENT_RDF_HASPART))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_RESOURCE), ODSFILE_CONTENT_FILE_NAME);
+
+    el = rdf.toElement(root.appendChild(rdf.document().createElementNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_RDF_DESC))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_ABOUT), "");
+    el = rdf.toElement(el.appendChild(rdf.document().createElementNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_RDF_TYPE))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_RESOURCE), ODS_RDF_RESOURCE_DOCUMENT);
+
+    return writeFile(ODSFILE_RDF_FILE_NAME, rdf, m_rdfBuf);
 }

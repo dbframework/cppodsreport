@@ -53,7 +53,8 @@ private:
     void parseTables(const DomNodeList& tables);
     void parseContent();
 
-    std::unique_ptr<char[]> m_contentBuf;
+    Buffer m_contentBuf;
+    Buffer m_rdfBuf;
     bool doOpen();
     void setError(int error = 0, bool zipError = false);
     bool doSave(bool createRes);
@@ -62,6 +63,7 @@ private:
 
     bool createMIMETypeFile();    
     bool createContent();
+    bool createRDFMetadata();
 public:
     ODSFile();
     ~ODSFile();

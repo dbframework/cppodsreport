@@ -39,6 +39,8 @@ namespace cppodsreport {
 #define ODS_NS_DR3D "urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0"
 #define ODS_NS_MATH "http://www.w3.org/1998/Math/MathML"
 #define ODS_NS_FORM "urn:oasis:names:tc:opendocument:xmlns:form:1.0"
+#define ODS_NS_RDF "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+#define ODS_NS_RDF_NS0 "http://docs.oasis-open.org/ns/office/1.2/meta/pkg#"
 
 #define ODS_NSP_OFFICE "office"
 #define ODS_NSP_TABLE "table"
@@ -58,6 +60,8 @@ namespace cppodsreport {
 #define ODS_NSP_DR3D "dr3d"
 #define ODS_NSP_MATH "math"
 #define ODS_NSP_FORM "form"
+#define ODS_NSP_RDF "rdf"
+#define ODS_NSP_RDF_NS0 "ns0"
 
 #define ODS_ELEMENT_TABLE "table"
 #define ODS_ELEMENT_ROW "table-row"
@@ -67,6 +71,11 @@ namespace cppodsreport {
 #define ODS_ELEMENT_TEXTP "p"
 #define ODS_ELEMENT_BODY "body"
 #define ODS_ELEMENT_SPREADSHEET "spreadsheet"
+#define ODS_ELEMENT_RDF "RDF"
+#define ODS_ELEMENT_RDF_DESC "Description"
+#define ODS_ELEMENT_RDF_TYPE "type"
+#define ODS_ELEMENT_RDF_HASPART "hasPart"
+#define ODS_ELEMENT_XML "?xml"
 
 #define ODS_ATTR_COL_REP "number-columns-repeated"
 #define ODS_ATTR_ROW_REP "number-rows-repeated"
@@ -75,6 +84,15 @@ namespace cppodsreport {
 #define ODS_ATTR_VALUE_TYPE "value-type"
 #define ODS_ATTR_VALUE "value"
 #define ODS_ATTR_VERSION "version"
+#define ODS_ATTR_RDF_RESOURCE "resource"
+#define ODS_ATTR_RDF_ABOUT "about"
+
+#define ODSFILE_CONTENT_FILE_NAME "content.xml"
+#define ODSFILE_MIMETYPE_FILE_NAME "mimetype"
+#define ODSFILE_RDF_FILE_NAME "manifest.rdf"
+
+#define ODS_RDF_RESOURCE_CONTENT "http://docs.oasis-open.org/ns/office/1.2/meta/odf#ContentFile"
+#define ODS_RDF_RESOURCE_DOCUMENT "http://docs.oasis-open.org/ns/office/1.2/meta/pkg#Document"
 
 }
 
