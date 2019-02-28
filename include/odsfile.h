@@ -55,6 +55,7 @@ private:
 
     Buffer m_contentBuf;
     Buffer m_rdfBuf;
+    Buffer m_manifestBuf;
     bool doOpen();
     void setError(int error = 0, bool zipError = false);
     bool doSave(bool createRes);
@@ -64,6 +65,7 @@ private:
     bool createMIMETypeFile();    
     bool createContent();
     bool createRDFMetadata();
+    bool createManifest();
 public:
     ODSFile();
     ~ODSFile();

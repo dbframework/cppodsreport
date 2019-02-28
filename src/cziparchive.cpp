@@ -368,3 +368,17 @@ bool CZipArchive::unchange_all()
 
     return result;
 }
+
+bool CZipArchive::addDir(const char* name)
+{
+    bool result = false;
+
+    if (!checkOpened())
+        return result;
+
+    result = !zip_add_dir(m_zip, name);
+    if (!result)
+        setZipError(zip_get_error(m_zip));
+
+    return result;
+}

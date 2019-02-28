@@ -21,6 +21,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace cppodsreport {
 
+#define ODS_VERSION "1.2"
+
 #define ODS_NS_OFFICE "urn:oasis:names:tc:opendocument:xmlns:office:1.0"
 #define ODS_NS_TABLE "urn:oasis:names:tc:opendocument:xmlns:table:1.0"
 #define ODS_NS_TEXT "urn:oasis:names:tc:opendocument:xmlns:text:1.0"
@@ -41,6 +43,7 @@ namespace cppodsreport {
 #define ODS_NS_FORM "urn:oasis:names:tc:opendocument:xmlns:form:1.0"
 #define ODS_NS_RDF "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 #define ODS_NS_RDF_NS0 "http://docs.oasis-open.org/ns/office/1.2/meta/pkg#"
+#define ODS_NS_MANIFEST "urn:oasis:names:tc:opendocument:xmlns:manifest:1.0"
 
 #define ODS_NSP_OFFICE "office"
 #define ODS_NSP_TABLE "table"
@@ -62,6 +65,7 @@ namespace cppodsreport {
 #define ODS_NSP_FORM "form"
 #define ODS_NSP_RDF "rdf"
 #define ODS_NSP_RDF_NS0 "ns0"
+#define ODS_NSP_MANIFEST "manifest"
 
 #define ODS_ELEMENT_TABLE "table"
 #define ODS_ELEMENT_ROW "table-row"
@@ -76,7 +80,9 @@ namespace cppodsreport {
 #define ODS_ELEMENT_RDF_TYPE "type"
 #define ODS_ELEMENT_RDF_HASPART "hasPart"
 #define ODS_ELEMENT_XML "?xml"
-
+#define ODS_ELEMENT_MANIFEST "manifest"
+#define ODS_ELEMENT_MANIFEST_ENTRY "file-entry"
+ 
 #define ODS_ATTR_COL_REP "number-columns-repeated"
 #define ODS_ATTR_ROW_REP "number-rows-repeated"
 #define ODS_ATTR_FORMULA "formula"
@@ -86,13 +92,21 @@ namespace cppodsreport {
 #define ODS_ATTR_VERSION "version"
 #define ODS_ATTR_RDF_RESOURCE "resource"
 #define ODS_ATTR_RDF_ABOUT "about"
+#define ODS_ATTR_MANIFEST_PATH "full-path"
+#define ODS_ATTR_MANIFEST_MIMETYPE "media-type"
 
 #define ODSFILE_CONTENT_FILE_NAME "content.xml"
 #define ODSFILE_MIMETYPE_FILE_NAME "mimetype"
 #define ODSFILE_RDF_FILE_NAME "manifest.rdf"
+#define ODSFILE_META_DIR "META-INF"
+#define ODSFILE_MANIFEST_FILE_NAME "META-INF/manifest.xml"
 
 #define ODS_RDF_RESOURCE_CONTENT "http://docs.oasis-open.org/ns/office/1.2/meta/odf#ContentFile"
-#define ODS_RDF_RESOURCE_DOCUMENT "http://docs.oasis-open.org/ns/office/1.2/meta/pkg#Document"
+#define ODS_RDF_RESOURCE_DOCUMENT "http://docs.oasis-open.org/ns/office/1.2/meta/pkg#Document"    
+
+#define ODS_MIMETYPE_SPREADSHEET "application/vnd.oasis.opendocument.spreadsheet"
+#define ODS_MIMETYPE_XML "text/xml"
+#define ODS_MIMETYPE_RDF_XML "application/rdf+xml"
 
 }
 

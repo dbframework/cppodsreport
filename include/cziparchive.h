@@ -204,6 +204,12 @@ public:
         @return true if success.
     */
     bool unchange_all();
+    /*!
+        Add directory to archive.
+        @param[in] name Directory name in UTF-8 or CP437 encoding.
+        @return True if success.
+    */
+    bool addDir(const char* name);
 private:
     ZipInt addFile(zip_source_t* src, const char* fileInZipName, bool replaceIfExists);
 #ifdef CPPODSREPORT_WIN

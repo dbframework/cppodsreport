@@ -25,8 +25,6 @@ using namespace cppodsreport;
 using namespace cppzip;
 using namespace std;
 
-const char* MIMETypeSpreadsheet = "application/vnd.oasis.opendocument.spreadsheet";
-
 ODSFile::ODSFile()
 {
     m_isOpen = false;
@@ -325,6 +323,9 @@ bool ODSFile::doSave(bool createRes)
     if (result)
         result = createRDFMetadata();
 
+    if (result)
+        result = createManifest();      
+      
     if (!result) {        
         m_zip.unchange_all();
         close();
@@ -340,7 +341,7 @@ bool ODSFile::doSave(bool createRes)
 bool ODSFile::createMIMETypeFile()
 {
     bool result = false;
-    CZipArchive::ZipInt index = m_zip.addFile(MIMETypeSpreadsheet, strlen(MIMETypeSpreadsheet), ODSFILE_MIMETYPE_FILE_NAME, true);
+    CZipArchive::ZipInt index = m_zip.addFile(ODS_MIMETYPE_SPREADSHEET, strlen(ODS_MIMETYPE_SPREADSHEET), ODSFILE_MIMETYPE_FILE_NAME, true);
     if (index >= 0) {
         result = m_zip.setCompression(index, CZipArchive::caStore);
     }
@@ -355,7 +356,7 @@ bool ODSFile::createContent()
 
     el = DOMDocumentWrapper::toElement(m_content.document().appendChild(m_content.document().createElementNS(ODS_NS_OFFICE, 
         DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_DOC_CONTENT))));
-    el.setAttributeNS(ODS_NS_OFFICE, DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ATTR_VERSION), "1.2");
+    el.setAttributeNS(ODS_NS_OFFICE, DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ATTR_VERSION), ODS_VERSION);
 
     el = DOMDocumentWrapper::toElement(el.appendChild(m_content.document().createElementNS(ODS_NS_OFFICE,
         DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_BODY))));
@@ -392,4 +393,32 @@ bool ODSFile::createRDFMetadata()
     el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_RESOURCE), ODS_RDF_RESOURCE_DOCUMENT);
 
     return writeFile(ODSFILE_RDF_FILE_NAME, rdf, m_rdfBuf);
+}
+
+bool ODSFile::createManifest()
+{
+    m_zip.addDir(ODSFILE_META_DIR);
+
+    DOMDocumentWrapper meta;
+
+    DomElement el = meta.toElement(meta.document().appendChild(meta.document().createElement(ODS_ELEMENT_XML)));
+    el.setAttribute(ODS_ATTR_VERSION, "1.0");
+
+    DomElement root = meta.toElement(meta.document().appendChild(meta.document().createElementNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ELEMENT_MANIFEST))));
+    root.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_VERSION), ODS_VERSION);
+    
+    el = meta.toElement(root.appendChild(meta.document().createElementNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ELEMENT_MANIFEST_ENTRY))));
+    el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_PATH), "/");
+    el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_MIMETYPE), ODS_MIMETYPE_SPREADSHEET);
+    el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_VERSION), ODS_VERSION);
+
+    el = meta.toElement(root.appendChild(meta.document().createElementNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ELEMENT_MANIFEST_ENTRY))));
+    el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_PATH), ODSFILE_CONTENT_FILE_NAME);
+    el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_MIMETYPE), ODS_MIMETYPE_XML);
+
+    el = meta.toElement(root.appendChild(meta.document().createElementNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ELEMENT_MANIFEST_ENTRY))));
+    el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_PATH), ODSFILE_RDF_FILE_NAME);
+    el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_MIMETYPE), ODS_MIMETYPE_RDF_XML);
+
+    return writeFile(ODSFILE_MANIFEST_FILE_NAME, meta, m_manifestBuf);
 }
