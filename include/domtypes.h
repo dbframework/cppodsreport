@@ -28,9 +28,24 @@ namespace cppodsreport {
 #define NODE_TYPE_TEXT 3
 
 typedef QString DomString;
-typedef QDomDocument DomDocument;
 typedef QDomNode DomNode;
 typedef QDomNodeList DomNodeList;
+
+class DomDocument : public QDomDocument
+{
+public:
+    DomDocument() :QDomDocument() {};
+    DomDocument(const QDomDocument & x) :QDomDocument(x) {};
+    DomDocument& operator=(const QDomDocument& x)
+    {
+        QDomDocument::operator =(x);
+        return *this;
+    }
+    DomNodeList getElementsByTagNameNS(const DomString & nsURI, const DomString & localName)
+    {
+        return elementsByTagNameNS(nsURI, localName);
+    }
+};
 
 class DomElement : public QDomElement
 {
@@ -45,7 +60,11 @@ public:
     DomString  getAttributeNS(DomString namespaceURI, DomString localName)
     {
         return attributeNS(namespaceURI, localName);
-    }        
+    }
+    operator bool()
+    {
+        return !isNull();
+    }
 };
 
 

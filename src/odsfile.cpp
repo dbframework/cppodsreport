@@ -261,6 +261,12 @@ ODSSheet& ODSFile::sheet(ODSSize sheetIndex)
     return m_tablesVector[sheetIndex];
 }
 
+ODSSize ODSFile::appendSheet()
+{
+    m_tablesVector.emplace_back(this);
+    return m_tablesVector.size() - 1;
+}
+
 DOMDocumentWrapper& ODSFile::content()
 {
     return m_content;
@@ -321,13 +327,17 @@ bool ODSFile::doSave(bool createRes)
         result = createContent();
 
     if (result)
+        result = createStyles();
+
+    if (result)
         result = createRDFMetadata();
 
     if (result)
         result = createManifest();      
       
-    if (!result) {        
-        m_zip.unchange_all();
+    if (!result) { 
+        if (m_isOpen)
+            m_zip.unchange_all();
         close();
         setError(ODSERR_ARCH_CREATE, true);
     }
@@ -351,8 +361,8 @@ bool ODSFile::createMIMETypeFile()
 
 bool ODSFile::createContent()
 {    
-    DomElement el = DOMDocumentWrapper::toElement(m_content.document().appendChild(m_content.document().createElement(ODS_ELEMENT_XML)));
-    el.setAttribute(ODS_ATTR_VERSION, "1.0");
+    m_content.document().appendChild(m_content.document().createProcessingInstruction(XML_DECLARATION, XML_DECLARATION_ATTR));
+    DomElement el;
 
     el = DOMDocumentWrapper::toElement(m_content.document().appendChild(m_content.document().createElementNS(ODS_NS_OFFICE, 
         DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_DOC_CONTENT))));
@@ -361,8 +371,8 @@ bool ODSFile::createContent()
     el = DOMDocumentWrapper::toElement(el.appendChild(m_content.document().createElementNS(ODS_NS_OFFICE,
         DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_BODY))));
 
-    el = DOMDocumentWrapper::toElement(el.appendChild(m_content.document().createElementNS(ODS_NS_RDF,
-        DOMDocumentWrapper::qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_SPREADSHEET))));
+    el = DOMDocumentWrapper::toElement(el.appendChild(m_content.document().createElementNS(ODS_NS_OFFICE,
+        DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_SPREADSHEET))));
 
     return true;
 }
@@ -371,11 +381,21 @@ bool ODSFile::createRDFMetadata()
 {
     DOMDocumentWrapper rdf;
 
-    DomElement el = rdf.toElement(rdf.document().appendChild(rdf.document().createElement(ODS_ELEMENT_XML)));
-    el.setAttribute(ODS_ATTR_VERSION, "1.0");
+    rdf.document().appendChild(rdf.document().createProcessingInstruction(XML_DECLARATION, XML_DECLARATION_ATTR));
+    DomElement el;
 
     DomElement root = DOMDocumentWrapper::toElement(rdf.document().appendChild(rdf.document().createElementNS(ODS_NS_OFFICE,
         DOMDocumentWrapper::qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_RDF))));
+
+    el = rdf.toElement(root.appendChild(rdf.document().createElementNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_RDF_DESC))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_ABOUT), ODSFILE_STYLES_FILE_NAME);
+    el = rdf.toElement(el.appendChild(rdf.document().createElementNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_RDF_TYPE))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_RESOURCE), ODS_RDF_RESOURCE_STYLES);
+
+    el = rdf.toElement(root.appendChild(rdf.document().createElementNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_RDF_DESC))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_ABOUT), "");
+    el = rdf.toElement(el.appendChild(rdf.document().createElementNS(ODS_NS_RDF_NS0, rdf.qualifiedName(ODS_NSP_RDF_NS0, ODS_ELEMENT_RDF_HASPART))));
+    el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_RESOURCE), ODSFILE_STYLES_FILE_NAME);
 
     el = rdf.toElement(root.appendChild(rdf.document().createElementNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ELEMENT_RDF_DESC))));
     el.setAttributeNS(ODS_NS_RDF, rdf.qualifiedName(ODS_NSP_RDF, ODS_ATTR_RDF_ABOUT), ODSFILE_CONTENT_FILE_NAME);
@@ -401,8 +421,8 @@ bool ODSFile::createManifest()
 
     DOMDocumentWrapper meta;
 
-    DomElement el = meta.toElement(meta.document().appendChild(meta.document().createElement(ODS_ELEMENT_XML)));
-    el.setAttribute(ODS_ATTR_VERSION, "1.0");
+    meta.document().appendChild(meta.document().createProcessingInstruction(XML_DECLARATION, XML_DECLARATION_ATTR));
+    DomElement el;
 
     DomElement root = meta.toElement(meta.document().appendChild(meta.document().createElementNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ELEMENT_MANIFEST))));
     root.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_VERSION), ODS_VERSION);
@@ -417,8 +437,25 @@ bool ODSFile::createManifest()
     el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_MIMETYPE), ODS_MIMETYPE_XML);
 
     el = meta.toElement(root.appendChild(meta.document().createElementNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ELEMENT_MANIFEST_ENTRY))));
+    el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_PATH), ODSFILE_STYLES_FILE_NAME);
+    el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_MIMETYPE), ODS_MIMETYPE_XML);
+
+    el = meta.toElement(root.appendChild(meta.document().createElementNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ELEMENT_MANIFEST_ENTRY))));
     el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_PATH), ODSFILE_RDF_FILE_NAME);
     el.setAttributeNS(ODS_NS_MANIFEST, meta.qualifiedName(ODS_NSP_MANIFEST, ODS_ATTR_MANIFEST_MIMETYPE), ODS_MIMETYPE_RDF_XML);
 
     return writeFile(ODSFILE_MANIFEST_FILE_NAME, meta, m_manifestBuf);
+}
+
+bool ODSFile::createStyles()
+{ 
+    DOMDocumentWrapper styles;
+
+    styles.document().appendChild(styles.document().createProcessingInstruction(XML_DECLARATION, XML_DECLARATION_ATTR));
+    DomElement el;
+
+    DomElement root = styles.toElement(styles.document().appendChild(styles.document().createElementNS(ODS_NS_OFFICE, styles.qualifiedName(ODS_NSP_OFFICE, ODS_ELEMENT_DOCUMENT_STYLES))));
+    root.setAttributeNS(ODS_NS_OFFICE, styles.qualifiedName(ODS_NSP_OFFICE, ODS_ATTR_VERSION), ODS_VERSION);      
+
+    return writeFile(ODSFILE_STYLES_FILE_NAME, styles, m_stylesBuf);
 }

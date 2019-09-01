@@ -56,6 +56,7 @@ private:
     Buffer m_contentBuf;
     Buffer m_rdfBuf;
     Buffer m_manifestBuf;
+    Buffer m_stylesBuf;
     bool doOpen();
     void setError(int error = 0, bool zipError = false);
     bool doSave(bool createRes);
@@ -66,6 +67,7 @@ private:
     bool createContent();
     bool createRDFMetadata();
     bool createManifest();
+    bool createStyles();
 public:
     ODSFile();
     ~ODSFile();
@@ -91,6 +93,7 @@ public:
 
     ODSSize sheetCount();
     ODSSheet& sheet(ODSSize sheetIndex);
+    ODSSize appendSheet();
 
     DOMDocumentWrapper& content();
 

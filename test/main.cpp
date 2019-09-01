@@ -32,6 +32,6 @@ int main(int argc, char* argv[])
         path = string(argv[1]);
     }
 
-    Test3(path).run();
+    //Test3(path).run();
     TestSave(path).run();
 }

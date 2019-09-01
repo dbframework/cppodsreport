@@ -79,9 +79,9 @@ namespace cppodsreport {
 #define ODS_ELEMENT_RDF_DESC "Description"
 #define ODS_ELEMENT_RDF_TYPE "type"
 #define ODS_ELEMENT_RDF_HASPART "hasPart"
-#define ODS_ELEMENT_XML "?xml"
 #define ODS_ELEMENT_MANIFEST "manifest"
 #define ODS_ELEMENT_MANIFEST_ENTRY "file-entry"
+#define ODS_ELEMENT_DOCUMENT_STYLES "document-styles"
  
 #define ODS_ATTR_COL_REP "number-columns-repeated"
 #define ODS_ATTR_ROW_REP "number-rows-repeated"
@@ -100,14 +100,18 @@ namespace cppodsreport {
 #define ODSFILE_RDF_FILE_NAME "manifest.rdf"
 #define ODSFILE_META_DIR "META-INF"
 #define ODSFILE_MANIFEST_FILE_NAME "META-INF/manifest.xml"
+#define ODSFILE_STYLES_FILE_NAME "styles.xml"
 
 #define ODS_RDF_RESOURCE_CONTENT "http://docs.oasis-open.org/ns/office/1.2/meta/odf#ContentFile"
+#define ODS_RDF_RESOURCE_STYLES "http://docs.oasis-open.org/ns/office/1.2/meta/odf#StylesFile"
 #define ODS_RDF_RESOURCE_DOCUMENT "http://docs.oasis-open.org/ns/office/1.2/meta/pkg#Document"    
 
 #define ODS_MIMETYPE_SPREADSHEET "application/vnd.oasis.opendocument.spreadsheet"
 #define ODS_MIMETYPE_XML "text/xml"
 #define ODS_MIMETYPE_RDF_XML "application/rdf+xml"
 
+#define XML_DECLARATION "xml"
+#define XML_DECLARATION_ATTR "version='1.0' encoding='UTF-8'"
 }
 
 #endif // ODSCONST_H

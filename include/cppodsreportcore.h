@@ -36,6 +36,8 @@ public:
 class ODSSheet {
 public:
     virtual ODSSheetCell& cell(ODSSize row, ODSSize col) = 0;
+    virtual const wchar_t* sheetName() const = 0;
+    virtual void setSheetName(const wchar_t* name) = 0;
 };
 
 class ODFPackage {
@@ -50,11 +52,11 @@ public:
 #endif
     virtual bool process(DataSource* ds) = 0;
     virtual bool save() = 0;
-    virtual bool close() = 0;
-    
+    virtual bool close() = 0;    
     
     virtual ODSSize sheetCount() = 0;
     virtual ODSSheet& sheet(ODSSize sheetIndex) = 0;
+    virtual ODSSize appendSheet() = 0;
 };
 
 

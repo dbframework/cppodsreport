@@ -74,6 +74,7 @@ private:
     void updateRowInCellRanges(RowIndex startRow, int updateValue);
     void updateRowInCellRange(ODSCell& cell, RowIndex startRow, int updateValue);
     void updateRowInCellRange(ODSCellRange *r, RowIndex startRow, int updateValue);
+    void createNode();
 public:    
     ODSTable() = delete;
     ODSTable(ODSFile* file);
@@ -83,7 +84,10 @@ public:
     void assignVars(DataSource* ds, ODSTableMap& tables, ODSTableVector& vector);
     void save();
     std::wstring name() const;
+    void setName(const std::wstring& name);
     ODSSheetCell& cell(ODSSize row, ODSSize col);
+    const wchar_t* sheetName() const;
+    void setSheetName(const wchar_t* name);
 };
 
 

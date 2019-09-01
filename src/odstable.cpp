@@ -108,6 +108,11 @@ void ODSTable::save()
     DOMDocumentWrapper doc;
     int i;    
 
+    DomElement p = DOMDocumentWrapper::toElement(m_tableNode.parentNode());
+    if (!p) {
+        createNode();
+    }
+
     DomNodeList list = m_tableNode.elementsByTagNameNS(ODS_NS_TABLE, ODS_ELEMENT_ROW);
     for (; list.length() > 0; ) {
         m_tableNode.removeChild(list.item(0));
@@ -423,4 +428,33 @@ void ODSTable::updateRowInCellRange(ODSCellRange* r, RowIndex startRow, int upda
 ODSSheetCell& ODSTable::cell(ODSSize row, ODSSize col)
 {
     return m_table.forceItem(row, m_file->content().document()).cells().forceItem(col, m_file->content().document());
+}
+
+void ODSTable::createNode()
+{
+    DomNodeList l = m_file->content().document().getElementsByTagNameNS(ODS_NS_OFFICE, ODS_ELEMENT_SPREADSHEET);
+    if (0 == l.count())
+        throw exception("ODSTable::createNode - no spreadsheet node");
+    DomElement el = DOMDocumentWrapper::toElement(l.item(0));
+    m_tableNode = DOMDocumentWrapper::toElement(el.appendChild(m_file->content().document().createElementNS(ODS_NS_TABLE,
+        DOMDocumentWrapper::qualifiedName(ODS_NSP_TABLE, ODS_ELEMENT_TABLE))));
+    setName(m_name);
+}
+
+void ODSTable::setName(const wstring& name)
+{
+    m_name.assign(name);
+    if (!m_tableNode.isNull())
+        m_tableNode.setAttributeNS(ODS_NS_TABLE, DOMDocumentWrapper::qualifiedName(ODS_NSP_TABLE, ODS_ATTR_NAME), 
+            DOMDocumentWrapper::WstringToDomString(m_name));
+}
+
+const wchar_t* ODSTable::sheetName() const
+{
+    return m_name.c_str();
+}
+
+void ODSTable::setSheetName(const wchar_t* name)
+{
+    setName(name);
 }
