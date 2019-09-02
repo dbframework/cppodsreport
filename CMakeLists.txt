@@ -71,3 +71,26 @@ add_executable(testtool ${SRC_TEST})
 target_link_libraries(testtool cppodsreport)
 set_property(TARGET testtool PROPERTY CXX_STANDARD 11)
 set_property(TARGET testtool PROPERTY CXX_STANDARD_REQUIRED ON)
+
+#installation
+
+install (TARGETS cppodsreport report testtool
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib)
+
+set(INCLUDE_FILES include/cppodsreport.h
+                  include/cppodsreportcore.h
+                  include/cppodsreportexpdef.h
+                  include/datasourceabstract.h
+)
+install(FILES ${INCLUDE_FILES} DESTINATION include)
+
+set(TEST_FILES test/result1.ods
+               test/template1.ods
+               test/test1.ods
+               test/test2.ods
+               test/test3.ods
+               test/data1.xml
+               test/run.bat
+               test/run.sh)
+install(FILES ${TEST_FILES} DESTINATION test)
