@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(cppodsreport VERSION 1.1.0)
+project(cppodsreport VERSION 1.2.0)
 
 set(SRC_LIB src/cppodsreport.cpp 
             src/odsfile.cpp 
