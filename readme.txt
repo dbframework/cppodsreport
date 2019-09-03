@@ -56,7 +56,7 @@ CPPODSREPORT_API cppodsreport::ODFPackage* create();
 CPPODSREPORT_API void release(cppodsreport::ODFPackage* p);
 
 Use the create() function to get the pointer to the allocated cppodsreport::ODFPackage instance. Use cppodsreport::ODFPackage methods to open, save and modify the spreadsheet.
-See cppodsreport::ODFPackage methods description in cppodsreportcore.h header file. 
+See cppodsreport::ODFPackage methods description in the documentation. 
 
 After using cppodsreport::ODFPackage instance release it by call to release(...).
 
@@ -69,7 +69,7 @@ The process of report creation with cppodsreport library consists of three steps
 
 First, create report template file. Template file format is described in section 4.
 
-Second, implement the descendant of cppodsreport::DataSource class in your application. The cppodsreport::DataSource class must implement the retrieval of variable values by their names. This class is declared in datasourceabstract.h header file in the include subdirectory. See comments in this file for cppodsreport::DataSource description. 
+Second, implement the descendant of cppodsreport::DataSource class in your application. The cppodsreport::DataSource class must implement the retrieval of variable values by their names. See documentation for cppodsreport::DataSource description. 
 
 Third, call the function, exported by the library:
 CPPODSREPORT_API bool report(const char* fileName, cppodsreport::DataSource* dataSource, int* intError, int* zipError, int* zlibError, int* sysError);

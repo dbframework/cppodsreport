@@ -54,7 +54,7 @@ public:
         @param[in] columnName Variable name (an indentificator of a table and a column).
         @param[in] cellValue Allocated buffer where the method must copy cell value (including terminating zero).
         @param[in, out] size Upon call size must contain cellValue size in wchar_t symbols.
-        If columnn with columnName is not found the method must not mofify size. If cellValue is to small
+        If columnn with columnName is not found the method must not modify size. If cellValue is to small
         the method must set size to the required size in wchar_t symbols. Otherwise the method must set size
         to be actual size of the cell value, copied to cellValue (including terminating zero).
         @return True if success.
