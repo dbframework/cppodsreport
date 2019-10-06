@@ -24,7 +24,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace cppodsreport {
 
-class Test3 : public TestFile {
+class Test3 : public TestExistingFile {
 public:
     Test3(const std::string& path);
 protected:

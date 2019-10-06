@@ -70,7 +70,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Enumerations</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -86,6 +86,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classcppodsreport_1_1_o_d_s_sheet_cell-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -95,16 +96,316 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <p><code>#include &lt;<a class="el" href="cppodsreportcore_8h_source.html">cppodsreportcore.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:af65650bf77316dbb535b11e6779bc264"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#af65650bf77316dbb535b11e6779bc264">ValueType</a> { <br/>
+&#160;&#160;<b>VT_BOOL</b> = 0, 
+<b>VT_CURRENCY</b>, 
+<b>VT_DATE</b>, 
+<b>VT_FLOAT</b>, 
+<br/>
+&#160;&#160;<b>VT_PERCENTAGE</b>, 
+<b>VT_STRING</b>, 
+<b>VT_TIME</b>, 
+<b>VT_VOID</b>
+<br/>
+ }</td></tr>
+<tr class="separator:af65650bf77316dbb535b11e6779bc264"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a5b61d956971fa17698020612bbc0765b"><td class="memItemLeft" align="right" valign="top">virtual const wchar_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#a5b61d956971fa17698020612bbc0765b">text</a> () const =0</td></tr>
 <tr class="separator:a5b61d956971fa17698020612bbc0765b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac59bc86f1cdfadb14ad0e5803d58c5f4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#ac59bc86f1cdfadb14ad0e5803d58c5f4">setText</a> (const wchar_t *<a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#a5b61d956971fa17698020612bbc0765b">text</a>)=0</td></tr>
 <tr class="separator:ac59bc86f1cdfadb14ad0e5803d58c5f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa92aa1df92f6b93c3838382cd3298ada"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#af65650bf77316dbb535b11e6779bc264">ValueType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#aa92aa1df92f6b93c3838382cd3298ada">type</a> () const =0</td></tr>
+<tr class="separator:aa92aa1df92f6b93c3838382cd3298ada"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a796c3d6ed42bf39151eb351a70399fd3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#a796c3d6ed42bf39151eb351a70399fd3">setBool</a> (bool value)=0</td></tr>
+<tr class="separator:a796c3d6ed42bf39151eb351a70399fd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa32406b9168d426824a97c81441d6b98"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#aa32406b9168d426824a97c81441d6b98">setFloat</a> (double value)=0</td></tr>
+<tr class="separator:aa32406b9168d426824a97c81441d6b98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae416688fdde7bb7ed0559649da5c3cfe"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#ae416688fdde7bb7ed0559649da5c3cfe">setPercentage</a> (double value)=0</td></tr>
+<tr class="separator:ae416688fdde7bb7ed0559649da5c3cfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac16f9ee4a9baa638044a9c86716c32d0"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#ac16f9ee4a9baa638044a9c86716c32d0">setCurrency</a> (double value, const wchar_t *currency)=0</td></tr>
+<tr class="separator:ac16f9ee4a9baa638044a9c86716c32d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a609fd9f549145ec289bd8914b1e53349"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#a609fd9f549145ec289bd8914b1e53349">setDate</a> (int year, unsigned char month, unsigned char day)=0</td></tr>
+<tr class="separator:a609fd9f549145ec289bd8914b1e53349"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65db5f01d59ec0c49f4f69a71a98fb98"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#a65db5f01d59ec0c49f4f69a71a98fb98">setDate</a> (int year, unsigned char month, unsigned char day, unsigned char hour, unsigned char minute, float second)=0</td></tr>
+<tr class="separator:a65db5f01d59ec0c49f4f69a71a98fb98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22192ef9b26059535290384c3c31fb3a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#a22192ef9b26059535290384c3c31fb3a">setTime</a> (unsigned char hour, unsigned char minute, float second)=0</td></tr>
+<tr class="separator:a22192ef9b26059535290384c3c31fb3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html">ODSSheetCell</a> is an abstract class used to manipulate spreadsheet cell. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+</div><h2 class="groupheader">Member Enumeration Documentation</h2>
+<a class="anchor" id="af65650bf77316dbb535b11e6779bc264"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#af65650bf77316dbb535b11e6779bc264">cppodsreport::ODSSheetCell::ValueType</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Type of the cell value. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a796c3d6ed42bf39151eb351a70399fd3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cppodsreport::ODSSheetCell::setBool </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The setBool method sets cell value type to VT_BOOL and sets cell value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>New cell value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ac16f9ee4a9baa638044a9c86716c32d0"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cppodsreport::ODSSheetCell::setCurrency </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wchar_t *&#160;</td>
+          <td class="paramname"><em>currency</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The setCurrency method sets cell value type to VT_CURRENCY and sets cell value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>Numeric part of cell value. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">currency</td><td>Currency symbol, for example L"USD". </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a609fd9f549145ec289bd8914b1e53349"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cppodsreport::ODSSheetCell::setDate </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>year</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>month</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>day</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The setDate method sets cell value type to VT_DATE and sets cell value to specified date. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">year</td><td>Year, possibly negative. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">month</td><td>Month. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">day</td><td>Day of month. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="a65db5f01d59ec0c49f4f69a71a98fb98"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cppodsreport::ODSSheetCell::setDate </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>year</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>month</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>day</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>hour</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>minute</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>second</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The setDate method sets cell value type to VT_DATE and sets cell value to specified date and time. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">year</td><td>Year, possibly negative. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">month</td><td>Month. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">day</td><td>Day of month. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">hour</td><td>Hour. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">minute</td><td>Minute. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">second</td><td>Second, possibly with fraction part. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="aa32406b9168d426824a97c81441d6b98"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cppodsreport::ODSSheetCell::setFloat </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The setFloat method sets cell value type to VT_FLOAT and sets cell value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>New cell value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ae416688fdde7bb7ed0559649da5c3cfe"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cppodsreport::ODSSheetCell::setPercentage </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>value</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The setPercentage method sets cell value type to VT_PERCENTAGE and sets cell value. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">value</td><td>New cell value. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="ac59bc86f1cdfadb14ad0e5803d58c5f4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -136,6 +437,55 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a22192ef9b26059535290384c3c31fb3a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void cppodsreport::ODSSheetCell::setTime </td>
+          <td>(</td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>hour</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned char&#160;</td>
+          <td class="paramname"><em>minute</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>second</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The setTime method sets cell value type to VT_TIME and sets cell value to specified time duration. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">hour</td><td>Number of hours. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">minute</td><td>Number of minutes. </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">second</td><td>Number of seconds, possibly with fraction part. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a class="anchor" id="a5b61d956971fa17698020612bbc0765b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -161,13 +511,38 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="aa92aa1df92f6b93c3838382cd3298ada"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="classcppodsreport_1_1_o_d_s_sheet_cell.html#af65650bf77316dbb535b11e6779bc264">ValueType</a> cppodsreport::ODSSheetCell::type </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Get cell value type. </p>
+<dl class="section return"><dt>Returns</dt><dd>Cell value type. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/<a class="el" href="cppodsreportcore_8h_source.html">cppodsreportcore.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Sep 3 2019 12:49:07 for cppodsreport by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Oct 6 2019 23:39:41 for cppodsreport by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.5
 </small></address>

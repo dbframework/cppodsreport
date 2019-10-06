@@ -25,13 +25,11 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 namespace cppodsreport {
 
-class TestSave : public TestAbstract {
-private:
-    std::string m_path;
-    void fail(const std::string& msg) const;
+class TestSave : public TestNewFile {
 public:
     TestSave(const std::string& path);
-    void run();
+protected:
+    void processFile(ODFPackage* file);
 };
 
 }

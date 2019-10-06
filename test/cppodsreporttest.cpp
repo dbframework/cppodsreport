@@ -19,16 +19,18 @@ void TestFile::run()
     }
         
     try {
-        string fullName = m_path + m_fileName;
+/*        string fullName = m_path + m_fileName;
 #ifdef CPPODSREPORT_WIN
         bool b = file()->opena(fullName.c_str());
 #else
         bool b = file()->open(fullName.c_str());
-#endif
+#endif*/
+        bool b = open(file());
         if (b) {
             processFile(file());
 
-            b = file()->save();
+            //b = file()->save();
+            b = save(file());
             if (!b)
                 fail("can't save file");
         }
@@ -45,4 +47,45 @@ void TestFile::run()
 void TestFile::fail(const std::string& msg) const
 {
     cout << m_fileName << " processing failed: " << msg << endl;
+}
+
+
+TestExistingFile::TestExistingFile(const std::string& path, const std::string& fileName):
+    TestFile(path, fileName)
+{
+}
+
+bool TestExistingFile::open(ODFPackage* file)
+{
+    string fullName = m_path + m_fileName;
+#ifdef CPPODSREPORT_WIN
+    return file->opena(fullName.c_str());
+#else
+    return file->open(fullName.c_str());
+#endif
+}
+
+bool TestExistingFile::save(ODFPackage* file)
+{
+    return file->save();
+}
+
+TestNewFile::TestNewFile(const std::string& path, const std::string& fileName) :
+    TestFile(path, fileName)
+{
+}
+
+bool TestNewFile::open(ODFPackage* file)
+{
+    return true;
+}
+
+bool TestNewFile::save(ODFPackage* file)
+{
+    string fullName = m_path + m_fileName;
+#ifdef CPPODSREPORT_WIN
+    return file->savea(fullName.c_str());
+#else
+    return file->save(fullName.c_str());
+#endif
 }

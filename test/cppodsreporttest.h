@@ -38,11 +38,28 @@ protected:
     std::string m_fileName;
     void fail(const std::string& msg) const;
     virtual void processFile(ODFPackage* file) = 0;
+    virtual bool open(ODFPackage* file) = 0;
+    virtual bool save(ODFPackage* file) = 0;
 public:
     TestFile(const std::string& path, const std::string& fileName);
     void run();    
 };
 
+class TestExistingFile : public TestFile {
+protected:
+    bool open(ODFPackage* file);
+    bool save(ODFPackage* file);
+public:
+    TestExistingFile(const std::string& path, const std::string& fileName);
+};
+
+class TestNewFile : public TestFile {
+protected:
+    bool open(ODFPackage* file);
+    bool save(ODFPackage* file);
+public:
+    TestNewFile(const std::string& path, const std::string& fileName);
+};
 
 }
 

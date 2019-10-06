@@ -33,15 +33,19 @@ private:
     ODSFormulaSPtr m_formula;
     std::wstring m_text;
     DomNode getCellTextNode();    
+    ValueType m_valueType;
+    static const char* ValueTypes[];
+    static const char* ValueAttributes[];
+    std::wstring m_currency;
+    
     void assign(const ODSCell& cell);
     void saveText();
     void checkText();
-    void init();
-    enum ValueType {
-        VT_STRING,
-        VT_FLOAT
-    };
-    ValueType m_valueType;
+    void init();  
+    void getCellValue(DomElement& cellNode);
+    void readValueFromAttribute(DomElement& cellNode);
+    void readValueFromElement(DomElement& cellNode);
+    void saveValueToAttr();
 public:
     ODSCell();
     ODSCell(const ODSCell& cell);
@@ -58,6 +62,16 @@ public:
 
     const wchar_t* text() const;
     void setText(const wchar_t* text);
+
+    ValueType type() const;
+    void setBool(bool value);
+    void setFloat(double value);
+    void setPercentage(double value);
+    void setCurrency(double value, const wchar_t* currency);
+    void setDate(int year, unsigned char month, unsigned char day);
+    void setDate(int year, unsigned char month, unsigned char day, 
+        unsigned char hour, unsigned char minute, float second);
+    void setTime(unsigned char hour, unsigned char minute, float second);
 };
 
 }

@@ -46,6 +46,76 @@ public:
         @param[in] text New cell value.
     */
     virtual void setText(const wchar_t* text) = 0;
+
+    /*-----------------Added in version 1.2.2---------------------*/
+
+    /*!
+       Type of the cell value.
+    */
+    //Order of enum values is important and must be preserved.
+    enum ValueType {
+        VT_BOOL = 0,
+        VT_CURRENCY,
+        VT_DATE,
+        VT_FLOAT,
+        VT_PERCENTAGE,
+        VT_STRING,        
+        VT_TIME,
+        VT_VOID
+    };
+
+    /*!
+        Get cell value type.
+        @return  Cell value type.
+    */
+    virtual ValueType type() const = 0;
+
+    /*!
+        The setBool method sets cell value type to VT_BOOL and sets cell value.
+        @param[in] value New cell value.
+    */
+    virtual void setBool(bool value) = 0;
+    /*!
+        The setFloat method sets cell value type to VT_FLOAT and sets cell value.
+        @param[in] value New cell value.
+    */
+    virtual void setFloat(double value) = 0;
+    /*!
+        The setPercentage method sets cell value type to VT_PERCENTAGE and sets cell value.
+        @param[in] value New cell value.
+    */
+    virtual void setPercentage(double value) =0 ;
+    /*!
+        The setCurrency method sets cell value type to VT_CURRENCY and sets cell value.
+        @param[in] value Numeric part of cell value.
+        @param[in] currency Currency symbol, for example L"USD".
+    */
+    virtual void setCurrency(double value, const wchar_t* currency) = 0;
+    /*!
+        The setDate method sets cell value type to VT_DATE and sets cell value to specified date.
+        @param[in] year Year, possibly negative.
+        @param[in] month Month.
+        @param[in] day Day of month.
+    */
+    virtual void setDate(int year, unsigned char month, unsigned char day) = 0;
+    /*!
+        The setDate method sets cell value type to VT_DATE and sets cell value to specified date and time.
+        @param[in] year Year, possibly negative.
+        @param[in] month Month.
+        @param[in] day Day of month.
+        @param[in] hour Hour.
+        @param[in] minute Minute.
+        @param[in] second Second, possibly with fraction part.
+    */
+    virtual void setDate(int year, unsigned char month, unsigned char day,
+        unsigned char hour, unsigned char minute, float second) = 0;
+    /*!
+        The setTime method sets cell value type to VT_TIME and sets cell value to specified time duration.        
+        @param[in] hour Number of hours.
+        @param[in] minute Number of minutes.
+        @param[in] second Number of seconds, possibly with fraction part.
+    */
+    virtual void setTime(unsigned char hour, unsigned char minute, float second) = 0;
 };
 
 /*!

@@ -17,23 +17,21 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cppodsreport.h"
-#include "test3.h"
-#include <iostream>
-#include "testsave.h"
-#include "test4.h"
+#ifndef TEST4_H
+#define TEST4_H
 
-using namespace cppodsreport;
-using namespace std;
+#include "cppodsreporttest.h"
 
-int main(int argc, char* argv[])
-{
-    string path;
-    if (argc > 1) {
-        path = string(argv[1]);
-    }
+namespace cppodsreport {
 
-    Test3(path).run();
-    TestSave(path).run();
-    Test4(path).run();
+    class Test4 : public TestNewFile {
+    public:
+        Test4(const std::string& path);
+    protected:
+        void processFile(ODFPackage* file);
+    };
+
 }
+
+
+#endif //TEST4_H

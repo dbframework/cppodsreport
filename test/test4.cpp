@@ -17,23 +17,39 @@ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#include "cppodsreport.h"
-#include "test3.h"
-#include <iostream>
-#include "testsave.h"
 #include "test4.h"
 
 using namespace cppodsreport;
-using namespace std;
 
-int main(int argc, char* argv[])
+Test4::Test4(const std::string& path) : TestNewFile(path, "test4.ods")
 {
-    string path;
-    if (argc > 1) {
-        path = string(argv[1]);
-    }
 
-    Test3(path).run();
-    TestSave(path).run();
-    Test4(path).run();
+}
+
+void Test4::processFile(ODFPackage* file)
+{
+    ODSSize idx = file->appendSheet();
+    ODSSheet&  sheet = file->sheet(idx);
+    sheet.setSheetName(L"test");
+    
+    sheet.cell(0, 0).setText(L"Boolean value");
+    sheet.cell(1, 0).setBool(true);
+
+    sheet.cell(0, 1).setText(L"Floating point value");
+    sheet.cell(1, 1).setFloat(-1.23e1);
+
+    sheet.cell(0, 2).setText(L"Percentage value");
+    sheet.cell(1, 2).setPercentage(1.5);
+
+    sheet.cell(0, 3).setText(L"Currency value");
+    sheet.cell(1, 3).setCurrency(10.5, L"USD");
+
+    sheet.cell(0, 4).setText(L"Date value");
+    sheet.cell(1, 4).setDate(1970, 2, 5);
+
+    sheet.cell(0, 5).setText(L"Date value");
+    sheet.cell(1, 5).setDate(1970, 2, 5, 5, 2, 14.567);
+
+    sheet.cell(0, 6).setText(L"Time value");
+    sheet.cell(1, 6).setTime(10, 2, 22.5);
 }

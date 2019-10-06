@@ -95,6 +95,12 @@ namespace cppodsreport {
 #define ODS_ATTR_MANIFEST_PATH "full-path"
 #define ODS_ATTR_MANIFEST_MIMETYPE "media-type"
 
+#define ODS_ATTR_VALUE_STR  "string-value"
+#define ODS_ATTR_VALUE_BOOL "boolean-value"
+#define ODS_ATTR_VALUE_CUR  "currency"
+#define ODS_ATTR_VALUE_DATE "date-value"
+#define ODS_ATTR_VALUE_TIME "time-value"
+
 #define ODSFILE_CONTENT_FILE_NAME "content.xml"
 #define ODSFILE_MIMETYPE_FILE_NAME "mimetype"
 #define ODSFILE_RDF_FILE_NAME "manifest.rdf"
@@ -112,6 +118,15 @@ namespace cppodsreport {
 
 #define XML_DECLARATION "xml"
 #define XML_DECLARATION_ATTR "version='1.0' encoding='UTF-8'"
+
+#define ODS_VALUE_TYPE_BOOL "boolean"
+#define ODS_VALUE_TYPE_CUR  "currency"
+#define ODS_VALUE_TYPE_DATE "date"
+#define ODS_VALUE_TYPE_FLT  "float"
+#define ODS_VALUE_TYPE_PRC  "percentage"
+#define ODS_VALUE_TYPE_STR  "string"
+#define ODS_VALUE_TYPE_TIME "time"
+#define ODS_VALUE_TYPE_VOID "void"
 }
 
 #endif // ODSCONST_H

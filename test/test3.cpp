@@ -22,7 +22,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace cppodsreport;
 
 Test3::Test3(const std::string& path) :
-    TestFile(path, "test3.ods")
+    TestExistingFile(path, "test3.ods")
 {
 
 }
