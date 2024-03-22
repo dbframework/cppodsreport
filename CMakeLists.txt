@@ -44,8 +44,7 @@ endif(WIN32 OR CYGWIN)
 #find qt
 #set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-find_package(Qt5Core REQUIRED)
-find_package(Qt5Xml REQUIRED)
+find_package(Qt5 COMPONENTS core xml REQUIRED)
 
 #cppodsreport library
 add_library(cppodsreport SHARED ${SRC_LIB})
@@ -95,3 +94,10 @@ set(TEST_FILES test/result1.ods
                test/run.bat
                test/run.sh)
 install(FILES ${TEST_FILES} DESTINATION test)
+
+if(WIN32)
+cmake_path(GET Qt5_DIR PARENT_PATH Qt5dir)
+cmake_path(GET Qt5dir PARENT_PATH Qt5dir)
+cmake_path(GET Qt5dir PARENT_PATH Qt5dir)
+install(CODE "execute_process(COMMAND ${Qt5dir}/bin/windeployqt ${CMAKE_INSTALL_PREFIX}/bin)")
+endif()
