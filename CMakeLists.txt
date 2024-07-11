@@ -29,12 +29,16 @@ set(SRC_TEST test/main.cpp
              test/test4.cpp
 )
 
+include(GNUInstallDirs)
+
 #setup libzip paths
-find_library(ZIP_LIB zip)
-find_path(ZIP_H "zip.h")
-find_path(ZIPCONF_H "zipconf.h")
-set(LIBZIP_INCLUDE ${ZIP_H} ${ZIPCONF_H})
+find_library(ZIP_LIB zip REQUIRED)
+cmake_path(GET ZIP_LIB PARENT_PATH ZIP_DIR)
+cmake_path(GET ZIP_DIR PARENT_PATH ZIP_DIR)
+find_path(ZIPCONF_H "zipconf.h" HINT ${ZIP_DIR}/${CMAKE_INSTALL_LIBDIR})
 add_library(zip SHARED IMPORTED)
+target_include_directories(zip INTERFACE ${ZIP_DIR}/${CMAKE_INSTALL_INCLUDEDIR})
+target_include_directories(zip INTERFACE ${ZIPCONF_H})
 if(WIN32 OR CYGWIN)
   set_property(TARGET zip PROPERTY IMPORTED_IMPLIB ${ZIP_LIB})
 else(WIN32 OR CYGWIN)
@@ -49,7 +53,6 @@ find_package(Qt5 COMPONENTS core xml REQUIRED)
 #cppodsreport library
 add_library(cppodsreport SHARED ${SRC_LIB})
 target_include_directories(cppodsreport PUBLIC include)
-target_include_directories(cppodsreport PRIVATE ${LIBZIP_INCLUDE})
 target_link_libraries(cppodsreport Qt5::Core Qt5::Xml)
 target_link_libraries(cppodsreport zip)
 target_compile_definitions(cppodsreport PRIVATE CPPODSREPORT_EXPORT)
