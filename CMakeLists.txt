@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 
-project(cppodsreport VERSION 1.2.2)
+project(cppodsreport VERSION 1.2.3)
 
 set(SRC_LIB src/cppodsreport.cpp 
             src/odsfile.cpp 
@@ -35,9 +35,10 @@ include(GNUInstallDirs)
 find_library(ZIP_LIB zip REQUIRED)
 cmake_path(GET ZIP_LIB PARENT_PATH ZIP_DIR)
 cmake_path(GET ZIP_DIR PARENT_PATH ZIP_DIR)
-find_path(ZIPCONF_H "zipconf.h" HINT ${ZIP_DIR}/${CMAKE_INSTALL_LIBDIR})
+find_path(ZIPCONF_H "zipconf.h" HINT ${ZIP_DIR}/${CMAKE_INSTALL_LIBDIR} REQUIRED)
+find_path(ZIP_H "zip.h" HINT ${ZIP_DIR}/${CMAKE_INSTALL_LIBDIR} REQUIRED)
 add_library(zip SHARED IMPORTED)
-target_include_directories(zip INTERFACE ${ZIP_DIR}/${CMAKE_INSTALL_INCLUDEDIR})
+target_include_directories(zip INTERFACE ${ZIP_H})
 target_include_directories(zip INTERFACE ${ZIPCONF_H})
 if(WIN32 OR CYGWIN)
   set_property(TARGET zip PROPERTY IMPORTED_IMPLIB ${ZIP_LIB})
@@ -48,7 +49,7 @@ endif(WIN32 OR CYGWIN)
 #find qt
 #set(CMAKE_AUTOMOC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-find_package(Qt5 COMPONENTS core xml REQUIRED)
+find_package(Qt5 COMPONENTS Core Xml REQUIRED)
 
 #cppodsreport library
 add_library(cppodsreport SHARED ${SRC_LIB})
@@ -99,8 +100,11 @@ set(TEST_FILES test/result1.ods
 install(FILES ${TEST_FILES} DESTINATION test)
 
 if(WIN32)
-cmake_path(GET Qt5_DIR PARENT_PATH Qt5dir)
-cmake_path(GET Qt5dir PARENT_PATH Qt5dir)
-cmake_path(GET Qt5dir PARENT_PATH Qt5dir)
-install(CODE "execute_process(COMMAND ${Qt5dir}/bin/windeployqt ${CMAKE_INSTALL_PREFIX}/bin)")
+set(DEPLOY_QT5 OFF CACHE BOOL "Install required Qt5 libraries")
+if(DEPLOY_QT5)
+    cmake_path(GET Qt5_DIR PARENT_PATH Qt5dir)
+    cmake_path(GET Qt5dir PARENT_PATH Qt5dir)
+    cmake_path(GET Qt5dir PARENT_PATH Qt5dir)
+    install(CODE "execute_process(COMMAND ${Qt5dir}/bin/windeployqt ${CMAKE_INSTALL_PREFIX}/bin)")
+endif()
 endif()

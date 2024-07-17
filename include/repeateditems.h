@@ -21,17 +21,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define REPEATEDITEMS_H
 
 #include <list>
+#include <stdexcept>
 
 template <typename Item, typename ItemArg>
 class RepeatedItems : public std::list<Item>
 {
+public:
+	using size_type = typename std::list<Item>::size_type;
+    using iterator = typename std::list<Item>::iterator;
 private:
     //ItemArg m_itemArg;
 
     void appendEmtyRows(size_type count, ItemArg arg)
     {
-        push_back(Item(arg));
-        back().setRepeatCount(count);
+        this->push_back(Item(arg));
+        this->back().setRepeatCount(count);
     };
 
     Item& extractRow(iterator& repeatedRow, size_type index)
@@ -39,7 +43,7 @@ private:
         size_type repeatCount = repeatedRow->repeatCount();
 
         if (index > repeatCount - 1)
-            throw out_of_range("RepeatedItems::extractRow - invalid index");
+            throw std::out_of_range("RepeatedItems::extractRow - invalid index");
 
         if (repeatCount == 1)
             return *repeatedRow;
@@ -55,12 +59,12 @@ private:
             r.setRepeatCount(index);
             res = next(repeatedRow);
             if (index != repeatCount - 1) {//row is not last, need to add rows after
-                res = insert(res, Item(r));
+                res = this->insert(res, Item(r));
                 res->setRepeatCount(repeatCount - index - 1);
             }
         }
 
-        res = insert(res, Item(r));
+        res = this->insert(res, Item(r));
         res->setRepeatCount(1);
         return *res;       
     };
@@ -72,18 +76,18 @@ public:
     {
         size_type r = 0;
         iterator i;
-        for (i = begin(); i != end(); ++i) {
+        for (i = this->begin(); i != this->end(); ++i) {
             r += i->repeatCount();
             if (r > row)
                 break;
         }
 
-        if (i == end()) {//need to add new rows
+        if (i == this->end()) {//need to add new rows
             size_type rowsToAdd = row - r;
             if (rowsToAdd)
                 appendEmtyRows(rowsToAdd, arg);
             appendEmtyRows(1, arg);
-            return back();
+            return this->back();
         }
         else if (i->repeatCount() > 1) {//row is repeated row, need to extract one row           
             size_type indexInRow = row - (r - i->repeatCount());

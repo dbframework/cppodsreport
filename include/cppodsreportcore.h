@@ -22,13 +22,14 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "cppodsreportexpdef.h"
 #include "datasourceabstract.h"
+#include <cstddef>
 
 namespace cppodsreport {
 
 /*!
     Integer type used by library methods.
 */
-typedef size_t ODSSize;
+typedef std::size_t ODSSize;
 
 
 /*!

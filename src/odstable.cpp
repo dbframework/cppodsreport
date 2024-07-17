@@ -434,7 +434,7 @@ void ODSTable::createNode()
 {
     DomNodeList l = m_file->content().document().getElementsByTagNameNS(ODS_NS_OFFICE, ODS_ELEMENT_SPREADSHEET);
     if (0 == l.count())
-        throw exception("ODSTable::createNode - no spreadsheet node");
+        throw logic_error("ODSTable::createNode - no spreadsheet node");
     DomElement el = DOMDocumentWrapper::toElement(l.item(0));
     m_tableNode = DOMDocumentWrapper::toElement(el.appendChild(m_file->content().document().createElementNS(ODS_NS_TABLE,
         DOMDocumentWrapper::qualifiedName(ODS_NSP_TABLE, ODS_ELEMENT_TABLE))));
